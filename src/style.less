@@ -1,0 +1,23 @@
+#root {
+  height: inherit;
+  transition: transform .3s cubic-bezier(.78,.14,.15,.86);
+}
+
+.row-dragging{
+  background: #fafafa;
+  border: 1px solid #d9d9d9;
+  .drag-visible {
+    visibility: visible;
+  }
+  td {
+    padding: 14px;
+    &:nth-child(3), &:nth-child(4){
+      display: none;
+    }
+  }
+}
+
+.ant-affix{
+  box-shadow: 5px 1px 10px 0 rgb(0 0 0 / 10%);
+  // border-bottom: 1px solid #000;
+}

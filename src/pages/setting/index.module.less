@@ -1,0 +1,42 @@
+.group {
+  margin-bottom: 24px;
+  border: 1px solid #d8dee4;
+    // padding: 16px;
+  border-radius: 6px;
+  transition: border-color .3s ease;
+  h4{
+    border-bottom: 1px solid #d8dee4;
+    padding:12px 16px;
+    margin-bottom: 0;
+    font-size: 14px;
+  }
+  .groupOptions{
+    .channel{
+      border-bottom: 1px dashed #ddd;
+      padding: 16px;
+      &:last-child{
+        margin-bottom: 0;
+        border-bottom: 0;
+      }
+      .channel_title{
+        font-weight: 600;
+        color: #555;
+        span{
+          font-size: 12px;
+          font-weight: normal;
+          color: #ccc;
+        }
+      }
+      .channel_description{
+        color: #aaa;
+        font-size: 12px;
+      }
+      .channel_body{
+        width: 100%;
+      }
+    }
+  }
+  &:hover{
+    background-color: #fefefe;
+  }
+}
