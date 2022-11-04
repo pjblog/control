@@ -1,12 +1,11 @@
-import React, { useEffect, useMemo, useState, Suspense } from 'react';
+import React, { useEffect, useMemo, useState, Suspense, useDeferredValue, useRef } from 'react';
 import styles from './index.module.less';
 import classnames from 'classnames';
-import compile, { TMarkdownCompileResult } from '@pjblog/markdown';
 import CodeMirror from '@uiw/react-codemirror';
 import { useRequestParam } from '@codixjs/codix';
-import { useAsync, useAsyncCallback } from '@codixjs/fetch';
+import { useAsync, useAsyncCallback, useClient } from '@codixjs/fetch';
 import { Button, Space, Input, Tooltip, message, Divider } from 'antd';
-import { getArticle, useBaseRequestConfigs, TArticlePostData, addNewArticle, updateArticleById } from '../../../service';
+import { getArticle, useBaseRequestConfigs, TArticlePostData, addNewArticle, updateArticleById, getPreview } from '../../../service';
 import { numberic } from '../../../utils';
 import { Flex, Loading } from '../../../components';
 import { CategorySelect } from './category';
@@ -18,6 +17,7 @@ import { usePath } from '../../../hooks';
 
 export default function ArticleBoxPage() {
   const configs = useBaseRequestConfigs();
+  const client = useClient();
   const Article = usePath('ARTICLE');
   const id = useRequestParam('id', numberic(0)) as number;
   const { data, execute } = useAsync('article:' + id, () => getArticle(id, configs), [id]);
@@ -26,11 +26,17 @@ export default function ArticleBoxPage() {
   const [viewHTML, setViewHTML] = useState(false);
   const [category, setCategory] = useState(data.category);
   const [tags, setTags] = useState<string[]>(data.tags);
-  const [{ html, summary }, setState] = useState<TMarkdownCompileResult>({
+  const timer = useRef(null);
+
+  const previewValue = useDeferredValue(value);
+  const preview = useAsyncCallback(getPreview, {
     headings: [],
     html: '',
+    summary: ''
   });
 
+  const html = preview.data.html;
+  const summary = preview.data.summary;
   const postData: TArticlePostData = {
     title, category, tags,
     content: value,
@@ -54,12 +60,14 @@ export default function ArticleBoxPage() {
     if (!summary) return message.warn('请输入摘要内容');
     if (id > 0) {
       updateArticle.execute()
+        .then(() => client.reload('articles'))
         .then(execute)
         .then(() => message.success('更新文章成功，正在返回文章列表'))
         .then(() => path.redirect())
         .catch(e => message.error(e.message));
     } else {
       newArticle.execute()
+        .then(() => client.reload('articles'))
         .then(() => message.success('发布文章成功，正在返回文章列表'))
         .then(() => path.redirect())
         .catch(e => message.error(e.message));
@@ -67,8 +75,10 @@ export default function ArticleBoxPage() {
   }
 
   useEffect(() => {
-    compile(value).then(val => setState(val));
-  }, [value])
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => preview.execute(previewValue), 300);
+    return () => clearTimeout(timer.current);
+  }, [previewValue])
 
   useEffect(() => {
     setTitle(data.title);
@@ -129,9 +139,7 @@ export default function ArticleBoxPage() {
     </Flex>
     <Flex className={styles.editorTools} block align="between" valign="middle">
       <div>
-        <span style={{
-          marginRight: 12
-        }}>文章保存条件:</span>
+        <span style={{ marginRight: 12 }}>文章保存条件:</span>
         <Space>标题<CheckOutlined className={classnames(styles.checker, {
           [styles.allowed]: !!title.length
         })} /></Space>

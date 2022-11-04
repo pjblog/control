@@ -20,7 +20,6 @@
     "@codixjs/codix": "^1.0.0",
     "@codixjs/fetch": "^1.0.0",
     "@codixjs/server": "^1.0.0",
-    "@pjblog/markdown": "^1.0.1",
     "@uiw/react-codemirror": "^4.12.4",
     "antd": "^4.23.6",
     "array-move": "^4.0.0",

@@ -43,3 +43,8 @@ export async function updateArticleById(id: number, data: TArticlePostData) {
   const res = await request.put('/control/article/' + id, data);
   return res.data;
 }
+
+export async function getPreview(content: string) {
+  const res = await request.post('/control/article/preview', { text: content });
+  return res.data;
+}
