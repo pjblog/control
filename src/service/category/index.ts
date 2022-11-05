@@ -1,5 +1,5 @@
 import { request } from '../request';
-import type { BlogCategoryEntity, TStorageCategory } from './types';
+import type { BlogCategoryEntity, TUnOutableCategoryState } from './types';
 import type { AxiosRequestConfig } from 'axios';
 
 export * from './types';
@@ -9,17 +9,24 @@ export async function getCategories(configs?: AxiosRequestConfig) {
   return res.data;
 }
 
-export async function getCategoriesByShort(configs?: AxiosRequestConfig) {
-  const res = await request.get<TStorageCategory[]>('/category', configs);
+export async function getUnOutableCategories(configs?: AxiosRequestConfig) {
+  const res = await request.get<TUnOutableCategoryState[]>('/control/category/unoutable', configs);
   return res.data;
 }
 
-export async function updateCategory(id: number, name: string, order?: number) {
+export async function addCategory(name: string, outable: boolean, outlink?: string) {
+  const res = await request.post('/control/category', {
+    cate_name: name,
+    cate_outable: outable,
+    cate_outlink: outlink,
+  })
+  return res.data;
+}
+
+export async function updateCategory(id: number, name: string, outlink?: string) {
   const configs: any = {
     cate_name: name,
-  }
-  if (order !== undefined) {
-    configs.cate_order = order;
+    cate_outlink: outlink,
   }
   const res = await request.put('/control/category/' + id, configs);
   return res.data;

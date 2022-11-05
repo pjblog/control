@@ -109,3 +109,12 @@ export interface TBlogSettingProps {
   gmt_modified: Date,
   id: number,
 }
+
+export interface TDiskState {
+  Filesystem: string,
+  Blocks: number,
+  Used: number,
+  Available: number,
+  Capacity: string,
+  Mounted: string,
+}

@@ -7,16 +7,14 @@ export * from './types';
 export async function getArticles(options: {
   category?: number,
   keyword?: string,
-  tag?: number,
   page: number,
   size: number
 } = {
-  tag: 0,
   page: 1,
   size: 10,
 }, configs?: AxiosRequestConfig) {
   const res = await request.get<{ list: TArticle[], total: number }>(
-    '/article', 
+    '/control/article', 
     Object.assign(configs, {
       params: options,
     })

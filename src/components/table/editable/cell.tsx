@@ -1,35 +1,25 @@
 import React from 'react';
 import { EditableCellProps } from './types';
-import { InputNumber, Input, Form } from 'antd';
+import { Form } from 'antd';
 export function EditableCell<T>(props: React.PropsWithChildren<EditableCellProps<T>>) {
   const {
     editing,
+    editable,
     dataIndex,
     title,
-    inputType,
+    edittype,
     record,
     index,
     children,
     ...restProps
   } = props;
-  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
-
   return <td {...restProps}>
-    {editing ? (
-      <Form.Item
-        name={dataIndex}
-        style={{ margin: 0 }}
-        rules={[
-          {
-            required: true,
-            message: `Please Input ${title}!`,
-          },
-        ]}
-      >
-        {inputNode}
-      </Form.Item>
-    ) : (
-      children
-    )}
+    {
+      editing && editable 
+        ? <Form.Item name={dataIndex} style={{ margin: 0 }}>
+            {edittype}
+          </Form.Item> 
+        : children
+    }
   </td>
 }

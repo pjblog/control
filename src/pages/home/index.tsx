@@ -1,21 +1,16 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useAsync } from '@codixjs/fetch';
 import styles from './index.module.less';
-import { Button } from 'antd';
+import { Button, Col, Row } from 'antd';
+import { Disk } from './disk';
+import { getDiskInfo, useBaseRequestConfigs } from '../../service';
+import { Loading } from '../../components';
 export default function HomePage() {
-  const { data, success, error, execute, loading } = useAsync('test', () => new Promise<{ a: number }>((resolve, reject) => {
-    setTimeout(() => resolve({
-      a: Date.now()
-    }), 5000);
-  }))
-
-  return <div className={styles.bg}>Welcome: 
-    <p><Button type="primary" onClick={execute} loading={loading}>{ 
-      loading
-        ? 'load'
-        : success
-        ? data.a
-        : error.message
-    }</Button></p>
-  </div>
+  return <Row gutter={[24, 24]}>
+    <Col span={24}>
+      <Suspense fallback={<Loading />}>
+        <Disk />
+      </Suspense>
+    </Col>
+  </Row>
 }

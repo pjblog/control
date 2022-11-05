@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import styles from './index.module.less';
 import { EditableTable, TGetColumns } from '../../components';
 import { useAsync, useAsyncCallback } from '@codixjs/fetch';
-import { Col, message, Row, Typography, Popconfirm, Space, Radio } from 'antd';
+import { Col, message, Row, Typography, Popconfirm, Space, Radio, Input } from 'antd';
 import { getLinks, useBaseRequestConfigs, TLinkState, createNewLinkState, addLink, updateLink, deleteLink, updateLinkStatus } from '../../service';
 
 export default function LinkPage() {
@@ -62,7 +62,8 @@ export default function LinkPage() {
       {
         title: 'ICON',
         dataIndex: 'link_icon',
-        editable: true,
+        editable: () => true,
+        edittype: () => <Input placeholder="请输入ICON地址" />,
         width: 100,
         align: 'center',
         render(url: string) {
@@ -72,13 +73,15 @@ export default function LinkPage() {
       {
         title: '站点名',
         dataIndex: 'link_name',
-        editable: true,
+        editable: () => true,
+        edittype: () => <Input placeholder="请输入站点名" />,
         width: 200,
       },
       {
         title: '站点地址',
         dataIndex: 'link_url',
-        editable: true,
+        editable: () => true,
+        edittype: () => <Input placeholder="请输入站点地址" />,
         render(url: string) {
           return <Typography.Link href={url} target="_blank">{url}</Typography.Link>
         }
@@ -145,6 +148,7 @@ export default function LinkPage() {
         addNew={createNewLinkState} 
         loading={loading} 
         pagination={false}
+        addable={r => r.id === 0}
       />
     </Col>
   </Row>

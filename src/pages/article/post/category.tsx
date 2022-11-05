@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Select } from 'antd';
-import { getCategoriesByShort, useBaseRequestConfigs } from '../../../service';
+import { getUnOutableCategories, useBaseRequestConfigs } from '../../../service';
 import { useAsync } from '@codixjs/fetch';
 
 export function CategorySelect(props: React.PropsWithRef<{
@@ -8,7 +8,7 @@ export function CategorySelect(props: React.PropsWithRef<{
   setValue: (val: number) => void,
 }>) {
   const configs = useBaseRequestConfigs();
-  const { data, loading } = useAsync('categories:short', () => getCategoriesByShort(configs));
+  const { data, loading } = useAsync('categories:unoutable', () => getUnOutableCategories(configs));
   const options = useMemo(() => [{
     label: '请选择分类',
     value: 0,
@@ -18,5 +18,5 @@ export function CategorySelect(props: React.PropsWithRef<{
       value: dat.id
     }
   })), [data])
-  return <Select loading={loading} value={props.value} onChange={e => props.setValue(e)} options={options} />
+  return <Select style={{ width: 250 }} loading={loading} value={props.value} onChange={e => props.setValue(e)} options={options} />
 }
