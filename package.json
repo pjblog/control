@@ -1,6 +1,6 @@
 {
   "name": "@pjblog/control",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "pjblog control manager",
   "main": "index.js",
   "scripts": {
