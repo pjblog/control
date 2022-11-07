@@ -1,7 +1,8 @@
 {
-  "name": "control",
-  "private": true,
+  "name": "@pjblog/control",
   "version": "0.0.0",
+  "description": "pjblog control manager",
+  "main": "index.js",
   "scripts": {
     "dev": "npm run dev:spa",
     "dev:spa": "vite --host",
@@ -63,6 +64,7 @@
     }
   },
   "files": [
-    "dist/spa"
+    "dist/spa",
+    "index.js"
   ]
 }
