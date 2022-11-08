@@ -59,6 +59,11 @@ export default function createRouters(app: Application<HistoryMode>) {
     title: '列表',
     sidebar: true,
   }, () => import('./comment')));
+  const ARTICLE_COMMENT = app.bind<{ id: number }>('/comment/:id(\\d+)', ...withLayout({
+    fallback: <Loading size={36} />,
+    title: '列表',
+    sidebar: true,
+  }, () => import('./comment')));
 
   // 用户
   const USER = app.bind('/user', ...withLayout({
@@ -94,6 +99,7 @@ export default function createRouters(app: Application<HistoryMode>) {
     CATEGORY,
     ARTICLE,
     COMMENT,
+    ARTICLE_COMMENT,
     NEW_ARTICLE,
     MODIFY_ARTICLE,
     USER,

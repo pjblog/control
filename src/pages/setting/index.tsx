@@ -72,6 +72,7 @@ function Group(props: React.PropsWithoutRef<TConfigsGroup & TGetAndSet>) {
 function Save(props: React.PropsWithoutRef<{ value: TBlogSettingProps }>) {
   const { loading, execute } = useAsyncCallback(() => updateConfigs(props.value))
   const submit = () => {
+    console.log('save', props.value)
     execute()
       .then(() => message.success('保存成功'))
       .catch(e => message.error(e.message));

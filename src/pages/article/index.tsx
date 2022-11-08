@@ -18,7 +18,6 @@ export default function ArticlePage() {
   const size = Number(useRequestQuery('size', numberic(10)));
   const { data: { list, total }, loading, execute } = useAsync('articles', () => getArticles({
     category, keyword, page, size,
-    tag: 0,
   }, configs), [category, keyword, page, size])
   return <Fragment>
     <div className={styles.conditions}>

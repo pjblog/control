@@ -11,7 +11,16 @@ export interface TArticle {
   ctime: string,
   mtime: string,
   category: TItem,
+  commentable: boolean,
   tags: TItem[],
+  readCount: number,
+  user: {
+    id: number,
+    account: string,
+    nickname: string,
+    avatar: string,
+    level: number
+  }
 }
 
 export interface TArticleProps {
@@ -39,4 +48,21 @@ export interface TArticlePostData {
   category: number;
   tags: string[];
   content: string;
+}
+
+export interface TArticleEntity {
+  article_category: number,
+  article_code: string,
+  article_commentable: boolean,
+  article_content: string,
+  article_cover: string,
+  article_headings: { id: string, text: string, level: number }[],
+  article_html: string,
+  article_read_count: number,
+  article_summary: string,
+  article_title: string,
+  article_user_id: number
+  gmt_create: string | Date
+  gmt_modified: string | Date
+  id: number,
 }

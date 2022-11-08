@@ -46,3 +46,10 @@ export async function getPreview(content: string) {
   const res = await request.post('/control/article/preview', { text: content });
   return res.data;
 }
+
+export async function setCommenable(id: number, status: boolean) {
+  const res = await request.put('/control/article/' + id + '/commentable', {
+    status
+  })
+  return res.data;
+}
