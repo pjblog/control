@@ -14,6 +14,7 @@ export interface TArticle {
   commentable: boolean,
   tags: TItem[],
   readCount: number,
+  comments: number,
   user: {
     id: number,
     account: string,

@@ -46,7 +46,9 @@ export function Article(props: React.PropsWithoutRef<TArticle & { reload: () => 
       <Divider type="vertical" />
       <span>阅读量：{props.readCount}</span>
       <Divider type="vertical" />
-      <Typography.Link onClick={() => redirect('/comment/' + props.id)} disabled={loading}>评论</Typography.Link>
+      <span>评论量：{props.comments}</span>
+      <Divider type="vertical" />
+      <Typography.Link onClick={() => redirect('/comment/' + props.id)} disabled={loading}>查看评论</Typography.Link>
       <Divider type="vertical" />
       <Typography.Link onClick={() => redirect('/article/post/' + props.id)} disabled={loading}>编辑</Typography.Link>
       <Divider type="vertical" />
