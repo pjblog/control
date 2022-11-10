@@ -1,6 +1,6 @@
 {
   "name": "@pjblog/control",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "pjblog control manager",
   "main": "index.js",
   "scripts": {
@@ -33,7 +33,11 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.0.0",
-    "serve-static": "^1.15.0"
+    "serve-static": "^1.15.0",
+    "socket.io-client": "^4.5.3",
+    "xterm": "^5.0.0",
+    "xterm-addon-canvas": "^0.2.0",
+    "xterm-addon-fit": "^0.6.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",

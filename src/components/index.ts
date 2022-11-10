@@ -6,3 +6,4 @@ export * from './404';
 export * from './copyright';
 export * from './category';
 export * from './table';
+export * from './websocket';

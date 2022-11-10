@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-const pkg = require('./package.json')
+const pkg = require('./package.json');
+const dependencies = pkg.dependencies;
+const keys = Object.keys(dependencies);
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
@@ -32,11 +34,7 @@ export default defineConfig(async () => {
     build: {
       rollupOptions: {
         manualChunks: {
-          vonder: [
-            'react', 
-            'react-dom',
-            'antd',
-          ],
+          vonder: keys,
         }
       }
     },
@@ -57,6 +55,10 @@ export default defineConfig(async () => {
     server: {
       proxy: {
         "/api": {
+          changeOrigin: true,
+          target: "http://127.0.0.1:8000",
+        },
+        "/socket.io": {
           changeOrigin: true,
           target: "http://127.0.0.1:8000",
         }

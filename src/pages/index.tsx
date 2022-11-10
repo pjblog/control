@@ -1,6 +1,6 @@
-import { Application, HistoryMode } from '@codixjs/codix';
+import { Application, HistoryMode, withMiddleware } from '@codixjs/codix';
 import { Client, ClientProvider } from '@codixjs/fetch';
-import { Loading } from '../components';
+import { Loading, WebSocket } from '../components';
 import { withLayout } from '../withes';
 
 export default function createRouters(app: Application<HistoryMode>) {
@@ -92,6 +92,15 @@ export default function createRouters(app: Application<HistoryMode>) {
     title: '列表',
     sidebar: true,
   }, () => import('./plugin')));
+  // 模块
+  const MODULE = app.bind('/module', 
+    withMiddleware(WebSocket, { room: '/installing' }), 
+    ...withLayout({
+      fallback: <Loading size={36} />,
+      title: '列表',
+      sidebar: true,
+    }, () => import('./module'))
+  );
 
   return {
     HOME,
@@ -106,6 +115,7 @@ export default function createRouters(app: Application<HistoryMode>) {
     LINK,
     THEME,
     PLUGIN,
+    MODULE,
     client,
   }
 }
