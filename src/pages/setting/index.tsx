@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import styles from './index.module.less';
-import { Col, Row, Typography, Input, InputNumber, Switch, Space, Button, message, Checkbox } from 'antd';
+import { Col, Row, Typography, Input, InputNumber, Switch, Space, Button, message, Checkbox, Divider } from 'antd';
 import { useAsync, useAsyncCallback } from '@codixjs/fetch';
 import { getConfigs, TComponents, TConfigsGroup, TBlogSettingProps, TInput, TTextarea, TInputNumber, TSwitch, TCheckbox, updateConfigs, useBaseRequestConfigs } from '../../service';
 import { Flex } from '../../components';
@@ -47,7 +47,10 @@ function getComponent(type: keyof TComponents) {
 
 function Group(props: React.PropsWithoutRef<TConfigsGroup & TGetAndSet>) {
   return <div className={styles.group}>
-    <Typography.Title level={4}>{props.title}</Typography.Title>
+    <Typography.Title level={4}>
+      {props.title}
+      <span className={styles.subtitle}>{props.subTitle}</span>
+    </Typography.Title>
     <div className={styles.groupOptions}>
       {
         props.options.map(channel => {
@@ -72,7 +75,6 @@ function Group(props: React.PropsWithoutRef<TConfigsGroup & TGetAndSet>) {
 function Save(props: React.PropsWithoutRef<{ value: TBlogSettingProps }>) {
   const { loading, execute } = useAsyncCallback(() => updateConfigs(props.value))
   const submit = () => {
-    console.log('save', props.value)
     execute()
       .then(() => message.success('保存成功'))
       .catch(e => message.error(e.message));
@@ -110,6 +112,7 @@ function InputComponent(props: React.PropsWithoutRef<TInput & TGetAndSet & { nam
     allowClear={props.allowClear}
     value={value}
     onChange={e => setValue(e.target.value)}
+    placeholder={props.placeholder}
   />
 }
 
@@ -128,6 +131,7 @@ function TextareaComponent(props: React.PropsWithoutRef<TTextarea & TGetAndSet &
     value={value}
     onChange={e => setValue(e.target.value)}
     autoSize={props.autoSize}
+    placeholder={props.placeholder}
   />
 }
 
@@ -146,7 +150,11 @@ function NumberComponent(props: React.PropsWithoutRef<TInputNumber & TGetAndSet 
       max={props.max}
       min={props.min}
       step={props.step}
-    />{props.unit}
+    />
+    <span>{props.unit}</span>
+    <Divider type="vertical" />
+    {!!props.max ? <span className={styles.gray}>最大：{props.max}</span> : null}
+    {!!props.min ? <span className={styles.gray}>最小：{props.min}</span> : null}
   </Space>
 }
 

@@ -34,6 +34,5 @@ export default function ThemePage() {
           </Col>
         })
     }
-    
   </Row>
 }

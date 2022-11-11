@@ -27,6 +27,7 @@ export interface TInput {
   maxLength?: number,
   showCount?: boolean,
   allowClear?: boolean,
+  placeholder?: string,
 }
 
 export interface TTextarea extends Omit<TInput, 'type'> {
@@ -94,6 +95,7 @@ export interface TConfigsState {
 export interface TConfigsGroup {
   name: string,
   title: string,
+  subTitle?: string,
   options: TConfigsState[],
 }
   
