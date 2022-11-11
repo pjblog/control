@@ -80,11 +80,14 @@ export default function createRouters(app: Application<HistoryMode>) {
   }, () => import('./link')));
 
   // 主题
-  const THEME = app.bind('/theme', ...withLayout({
-    fallback: <Loading size={36} />,
-    title: '列表',
-    sidebar: true,
-  }, () => import('./theme')));
+  const THEME = app.bind('/theme', 
+    withMiddleware(WebSocket, { room: '/modularing' }), 
+    ...withLayout({
+      fallback: <Loading size={36} />,
+      title: '列表',
+      sidebar: true,
+    }, () => import('./theme'))
+  );
 
   // 插件
   const PLUGIN = app.bind('/plugin', ...withLayout({
