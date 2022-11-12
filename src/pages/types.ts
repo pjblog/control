@@ -6,6 +6,7 @@ export interface TBlogPackageMarker {
     type: 'theme' | 'plugin',
     icon: string,
     plugins?: Record<string, string>, // 主题
+    previews?: string[],
   }
 }
 
