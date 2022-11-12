@@ -84,7 +84,7 @@ export default function UserPage() {
   return <Row gutter={[24, 24]}>
     <Col span={24}>
       <Flex valign="middle" align="between">
-        <Input.Search autoFocus style={{ width: 250, }} onSearch={e => setKeyword(e)} placeholder="输入搜索的用户ID或者昵称" onChange={e => {
+        <Input.Search enterButton="搜索" autoFocus style={{ width: 300, }} onSearch={e => setKeyword(e)} placeholder="输入搜索的用户ID或者昵称" onChange={e => {
           if (!e.target.value) {
             setKeyword(undefined);
           }

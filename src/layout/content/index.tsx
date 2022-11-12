@@ -1,17 +1,20 @@
-import React, { Fragment, useContext, useMemo } from 'react';
+import React, { Fragment, useCallback, useContext, useMemo } from 'react';
 import styles from './index.module.less';
 import classnames from 'classnames';
-import { Typography, Breadcrumb, Affix, Button, Tooltip } from 'antd';
+import { Typography, Breadcrumb, Affix, Button, Tooltip, Space, ButtonProps, message, Popconfirm } from 'antd';
 import { Flex, CopyRight } from '../../components';
 import { useRequestPath, RequestContext, Path } from '@codixjs/codix';
 import { menus } from '../menus';
-import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
+import { HomeOutlined, PlusOutlined, ChromeOutlined, LogoutOutlined, ReadOutlined } from '@ant-design/icons';
 import { usePath } from '../../hooks';
+import { useAsyncCallback } from '@codixjs/fetch';
+import { doLogout } from '../../service';
 
 export function Content(props: React.PropsWithChildren<{ title?: string, wide?: boolean }>) {
   const path = useRequestPath<string>();
   const addNewArticle = usePath('NEW_ARTICLE');
   const pathes = useContext(RequestContext).pathes as Record<string, Path>;
+  const { loading, execute } = useAsyncCallback(doLogout);
   const current = useMemo(() => {
     const menu = menus.find(menu => {
       const url = pathes[menu.code].toString(menu.props);
@@ -25,7 +28,12 @@ export function Content(props: React.PropsWithChildren<{ title?: string, wide?: 
   const currentArray = useMemo(() => {
     return [current, props.title].filter(Boolean);
   }, [current, props.title]);
-  if (props.wide) return props.children;
+  const logout = useCallback(() => {
+    execute()
+      .then(() => window.location.reload())
+      .catch(e => message.error(e.message));
+  }, [execute])
+  if (props.wide) return props.children as JSX.Element;
   return <div className={classnames(styles.container, {
     [styles.wide]: !!props.wide,
   })}>
@@ -41,14 +49,46 @@ export function Content(props: React.PropsWithChildren<{ title?: string, wide?: 
             })
           }
         </Breadcrumb>
-        <span>
+        <Space>
           <Tooltip title="新建文章">
-            <Button type="primary" shape="circle" size="small" icon={<PlusOutlined />} onClick={() => addNewArticle.redirect()} />
+            <Abutton onClick={() => addNewArticle.redirect()}><PlusOutlined /></Abutton>
           </Tooltip>
-        </span>
+          <Tooltip title="官网 / 论坛">
+            <Abutton>
+              <Typography.Link href="https://www.pjhome.net" target="_blank">
+                <ChromeOutlined />
+              </Typography.Link>
+            </Abutton>
+          </Tooltip>
+          <Tooltip title="文档">
+            <Abutton>
+              <Typography.Link href="https://docs.pjhome.net" target="_blank">
+                <ReadOutlined />
+              </Typography.Link>
+            </Abutton>
+          </Tooltip>
+          
+          <Tooltip title="退出登录">
+            <Popconfirm
+              title="确定要退出登录？"
+              onConfirm={logout}
+              okText="退出"
+              cancelText="留下"
+              placement="leftBottom"
+            >
+              <Abutton loading={loading}><LogoutOutlined /></Abutton>
+            </Popconfirm>
+          </Tooltip>
+        </Space>
       </Flex>
     </Affix>
     <div className={styles.content}>{props.children}</div>
     <CopyRight />
   </div>
+}
+
+function Abutton(props: React.PropsWithChildren<ButtonProps>) {
+  return <Button {...props} type="text" className={styles.actionButton}>
+    {props.children}
+  </Button>
 }

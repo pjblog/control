@@ -1,22 +1,28 @@
-import React, { useEffect, useMemo, useState, Suspense, useDeferredValue, useRef } from 'react';
+import React, { useEffect, useMemo, useState, Suspense, useDeferredValue } from 'react';
 import styles from './index.module.less';
 import classnames from 'classnames';
 import CodeMirror from '@uiw/react-codemirror';
 import { useRequestParam } from '@codixjs/codix';
 import { useAsync, useAsyncCallback, useClient } from '@codixjs/fetch';
-import { Button, Space, Input, Tooltip, message, Divider } from 'antd';
+import { Button, Space, Input, Tooltip, message, Divider, Radio, Popover, Empty } from 'antd';
 import { getArticle, useBaseRequestConfigs, TArticlePostData, addNewArticle, updateArticleById } from '../../../service';
 import { numberic } from '../../../utils';
 import { Flex, Loading, useSocket } from '../../../components';
 import { CategorySelect } from './category';
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { languages } from '@codemirror/language-data';
-import { EyeOutlined, EyeInvisibleOutlined, CheckOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { CheckOutlined, ArrowLeftOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { Tags } from './tags';
 import { usePath } from '../../../hooks';
 
+interface THeading {
+  id: string,
+  level: number,
+  text: string
+}
+
 interface TPreview {
-  headings: any[],
+  headings: THeading[],
   html: string,
   summary: string,
 }
@@ -39,9 +45,12 @@ export default function ArticleBoxPage() {
     summary: ''
   })
 
+  console.log(preview)
+
   const previewValue = useDeferredValue(value);
   const html = preview.html;
   const summary = preview.summary;
+  const headings = preview.headings;
   const postData: TArticlePostData = {
     title, category, tags,
     content: value,
@@ -80,6 +89,12 @@ export default function ArticleBoxPage() {
         .catch(e => message.error(e.message));
     }
   }
+
+  const topics = useMemo(() => {
+    return headings.length
+      ? <Topics dataSource={headings} />
+      : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+  }, [headings])
 
   useEffect(() => {
     if (socket) {
@@ -121,7 +136,7 @@ export default function ArticleBoxPage() {
     </Flex>
     <Flex className={styles.editorContent} span={1} block>
       <Flex span={1} direction="vertical" scroll="hide" full>
-        <Flex className={styles.tip} align="between" valign="middle">编辑区</Flex>
+        <Flex className={styles.tip} align="right" valign="middle">编辑区</Flex>
         <Flex span={1} block scroll="y">
           <div className={styles.content}>
             <CodeMirror 
@@ -137,10 +152,14 @@ export default function ArticleBoxPage() {
       <Flex span={1} direction="vertical" scroll="hide" full>
         <Flex className={styles.tip} align="between" valign="middle">
           <span>预览区</span>
-          <Space>
-            <Tooltip title={viewHTML ? '代码模式' : '预览模式'} placement="left">
-              <Button size="small" onClick={() => setViewHTML(!viewHTML)} type="text" icon={viewHTML ? <EyeOutlined /> : <EyeInvisibleOutlined />} disabled={!html.length} />
-            </Tooltip>
+          <Space className={styles.toolbar}>
+            <Radio.Group onChange={(e) => setViewHTML(e.target.value)} value={viewHTML}>
+              <Radio value={true}>代码模式</Radio>
+              <Radio value={false}>预览模式</Radio>
+            </Radio.Group>
+            <Popover content={topics} title="本文导航" placement="leftBottom">
+              <Button type="primary" danger size="small">导航 <CaretDownOutlined /></Button>
+            </Popover>
           </Space>
         </Flex>
         <Flex span={1} block scroll="y">
@@ -182,4 +201,14 @@ export default function ArticleBoxPage() {
       </div>
     </Flex>
   </Flex>
+}
+
+function Topics(props: React.PropsWithoutRef<{ dataSource: THeading[] }>) {
+  return <ul className={styles.topics}>
+    {
+      props.dataSource.map(data => {
+        return <li key={data.id} style={{ paddingLeft: (data.level - 1) * 16 }}>[{data.level}] {data.text}</li>
+      })
+    }
+  </ul>
 }

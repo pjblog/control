@@ -24,24 +24,31 @@ export function Sidebar() {
       <ul className={styles.menus}>
         { menus.map(menu => <Channel key={menu.code} {...menu} />) }
       </ul>
-      {/* <Typography.Paragraph className={styles.quicks}>快捷入口</Typography.Paragraph>
-      <ul className={styles.tools}>
-        <li onClick={() => this.redirect('/article/post')}><FileTextTwoTone twoToneColor="#eb2f96" />写文章</li>
-        <li><AppstoreTwoTone twoToneColor="#52c41a" />安装模块</li>
-      </ul>
-      <Typography.Paragraph className={styles.quicks}>开发文档</Typography.Paragraph>
-      <ul className={styles.tools}>
-        <li onClick={() => this.redirect('/article/post')}><FileTextTwoTone twoToneColor="#eb2f96" />PJBlog使用文档</li>
-        <li onClick={() => this.redirect('/article/post')}><FileTextTwoTone twoToneColor="#eb2f96" />PJBlog疑难解答</li>
-        <li><AppstoreTwoTone twoToneColor="#52c41a" />插件开发文档</li>
-        <li><SkinTwoTone />主题开发文档</li>
-      </ul> */}
     </Flex>
-    <ul className={styles.extraList}>
+    {/* <div className={styles.toolbar}>
+      <Flex className={styles.tools} block>
+        <Flex span={1} className={styles.tool} align="center" direction="vertical" gap={[0, 4]}>
+          <HomeFilled className={styles.icon} />
+          <span>官网</span>
+        </Flex>
+        <Flex span={1} className={styles.tool} align="center" direction="vertical" gap={[0, 4]}>
+          <FileExclamationFilled className={styles.icon} />
+          <span>文档</span>
+        </Flex>
+        <Flex span={1} className={styles.tool} align="center" direction="vertical" gap={[0, 4]}>
+          <LockFilled className={styles.icon} />
+          <span>退出</span>
+        </Flex>
+      </Flex>
+    </div> */}
+    {/* <Flex align="center" valign="middle">
+      Copyright@PJHome.net v1.0.0 <br />
+    </Flex> */}
+    {/* <ul className={styles.extraList}>
       <li><HomeFilled />官网</li>
       <li><FileExclamationFilled />开发文档</li>
       <li><LockFilled />退出登录</li>
-    </ul>
+    </ul> */}
   </Flex>
 }
 

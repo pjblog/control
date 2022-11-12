@@ -37,3 +37,8 @@ export async function setForbidenStatus(account: string, status: boolean) {
   })
   return res.data;
 }
+
+export async function doLogout() {
+  const res = await request.delete('/logout');
+  return res.data;
+}

@@ -7,7 +7,7 @@ export default function HTML(props: React.PropsWithChildren<THtmlProps<{}>>) {
       <meta charSet="UTF-8" />
       <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Vite App</title>
+      <title>PJBlog 情怀版 后台管理系统</title>
       <Scripts dataSource={props.assets.headerScripts} />
       <PreLoads dataSource={props.assets.headerPreloadScripts}/>
       <Css dataSource={props.assets.headerCsses} />
