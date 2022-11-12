@@ -42,3 +42,8 @@ export async function doLogout() {
   const res = await request.delete('/logout');
   return res.data;
 }
+
+export async function getUserStatistic(configs?: AxiosRequestConfig) {
+  const res = await request.get<{ total: number, admins: number, forbidens: number }>('/control/statistic/user', configs);
+  return res.data;
+}

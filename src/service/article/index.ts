@@ -53,3 +53,8 @@ export async function setCommenable(id: number, status: boolean) {
   })
   return res.data;
 }
+
+export async function getArticleStatistic(configs?: AxiosRequestConfig) {
+  const res = await request.get<{ total: number, trashes: number }>('/control/statistic/article', configs);
+  return res.data;
+}

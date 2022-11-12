@@ -21,3 +21,8 @@ export async function deleteComment(cid: number) {
   const res = await request.delete('/comment/' + cid);
   return res.data;
 }
+
+export async function getCommentStatistic(configs?: AxiosRequestConfig) {
+  const res = await request.get<{ total: number, replies: number }>('/control/statistic/comment', configs);
+  return res.data;
+}

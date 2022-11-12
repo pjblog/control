@@ -39,3 +39,8 @@ export async function checkUpdate(name: string) {
   const res = await request.get<boolean>('/control/check/update/' + name);
   return res.data;
 }
+
+export async function getModuleStatistic(configs?: AxiosRequestConfig) {
+  const res = await request.get<{ themes: number, plugins: number }>('/control/statistic/modules', configs);
+  return res.data;
+}

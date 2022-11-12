@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import CodeMirror from '@uiw/react-codemirror';
 import { useRequestParam } from '@codixjs/codix';
 import { useAsync, useAsyncCallback, useClient } from '@codixjs/fetch';
-import { Button, Space, Input, Tooltip, message, Divider, Radio, Popover, Empty } from 'antd';
+import { Button, Space, Input, Tooltip, message, Divider, Dropdown, Popover, Empty, Segmented } from 'antd';
 import { getArticle, useBaseRequestConfigs, TArticlePostData, addNewArticle, updateArticleById } from '../../../service';
 import { numberic } from '../../../utils';
 import { Flex, Loading, useSocket } from '../../../components';
@@ -14,6 +14,7 @@ import { languages } from '@codemirror/language-data';
 import { CheckOutlined, ArrowLeftOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { Tags } from './tags';
 import { usePath } from '../../../hooks';
+import { SegmentedLabeledOption } from 'antd/lib/segmented';
 
 interface THeading {
   id: string,
@@ -26,6 +27,17 @@ interface TPreview {
   html: string,
   summary: string,
 }
+
+const viewMode: SegmentedLabeledOption[] = [
+  {
+    label: '代码模式',
+    value: 1,
+  },
+  {
+    label: '预览模式',
+    value: 0,
+  }
+]
 
 export default function ArticleBoxPage() {
   const configs = useBaseRequestConfigs();
@@ -44,8 +56,6 @@ export default function ArticleBoxPage() {
     html: '',
     summary: ''
   })
-
-  console.log(preview)
 
   const previewValue = useDeferredValue(value);
   const html = preview.html;
@@ -90,11 +100,12 @@ export default function ArticleBoxPage() {
     }
   }
 
-  const topics = useMemo(() => {
-    return headings.length
-      ? <Topics dataSource={headings} />
-      : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-  }, [headings])
+  const menus = headings.map(heading => {
+    return {
+      label: <span style={{ paddingLeft: (heading.level - 1) * 24 }}>[{heading.level}] {heading.text}</span>,
+      key: heading.id,
+    }
+  })
 
   useEffect(() => {
     if (socket) {
@@ -130,13 +141,14 @@ export default function ArticleBoxPage() {
         <Space>
           <Suspense fallback={<Loading />}><CategorySelect value={category} setValue={setCategory} /></Suspense>
           <Button type="primary" disabled={!canPost} loading={saving} onClick={submit}>保存</Button>
-          {/* <Button type="default" danger onClick={() => this.redirect('/article')} disabled={saving}>返回</Button> */}
         </Space>
       </Flex>
     </Flex>
     <Flex className={styles.editorContent} span={1} block>
       <Flex span={1} direction="vertical" scroll="hide" full>
-        <Flex className={styles.tip} align="right" valign="middle">编辑区</Flex>
+        <Flex className={styles.tip} align="right" valign="middle">
+          <Button type="primary">编辑区</Button>
+        </Flex>
         <Flex span={1} block scroll="y">
           <div className={styles.content}>
             <CodeMirror 
@@ -151,15 +163,9 @@ export default function ArticleBoxPage() {
       </Flex>
       <Flex span={1} direction="vertical" scroll="hide" full>
         <Flex className={styles.tip} align="between" valign="middle">
-          <span>预览区</span>
+          <Dropdown.Button menu={{ items: menus, onClick: e => goMarked(e.key) }} type="primary">预览区</Dropdown.Button>
           <Space className={styles.toolbar}>
-            <Radio.Group onChange={(e) => setViewHTML(e.target.value)} value={viewHTML}>
-              <Radio value={true}>代码模式</Radio>
-              <Radio value={false}>预览模式</Radio>
-            </Radio.Group>
-            <Popover content={topics} title="本文导航" placement="leftBottom">
-              <Button type="primary" danger size="small">导航 <CaretDownOutlined /></Button>
-            </Popover>
+            <Segmented options={viewMode} value={Number(viewHTML)} onChange={e => setViewHTML(Boolean(Number(e.toString())))} />
           </Space>
         </Flex>
         <Flex span={1} block scroll="y">
@@ -203,12 +209,11 @@ export default function ArticleBoxPage() {
   </Flex>
 }
 
-function Topics(props: React.PropsWithoutRef<{ dataSource: THeading[] }>) {
-  return <ul className={styles.topics}>
-    {
-      props.dataSource.map(data => {
-        return <li key={data.id} style={{ paddingLeft: (data.level - 1) * 16 }}>[{data.level}] {data.text}</li>
-      })
-    }
-  </ul>
+function goMarked(id: string) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({
+      behavior: 'smooth'
+    })
+  }
 }
