@@ -40,18 +40,26 @@ export default function createRouters(app: Application<HistoryMode>) {
   }, () => import('./article')));
 
   // 新建文章
-  const NEW_ARTICLE = app.bind('/article/post', ...withLayout({
-    fallback: <Loading size={36} />,
-    title: '新建',
-    sidebar: false,
-  }, () => import('./article/post')));
+  const NEW_ARTICLE = app.bind(
+    '/article/post', 
+    withMiddleware(WebSocket, { room: '/markdown' }), 
+    ...withLayout({
+      fallback: <Loading size={36} />,
+      title: '新建',
+      sidebar: false,
+    }, () => import('./article/post'))
+  );
 
   // 更新文章
-  const MODIFY_ARTICLE = app.bind<{ id: number }>('/article/post/:id(\\d+)', ...withLayout({
-    fallback: <Loading size={36} />,
-    title: '更新',
-    sidebar: false,
-  }, () => import('./article/post')));
+  const MODIFY_ARTICLE = app.bind<{ id: number }>(
+    '/article/post/:id(\\d+)', 
+    withMiddleware(WebSocket, { room: '/markdown' }), 
+    ...withLayout({
+      fallback: <Loading size={36} />,
+      title: '更新',
+      sidebar: false,
+    }, () => import('./article/post'))
+  );
 
   // 评论
   const COMMENT = app.bind('/comment', ...withLayout({
@@ -95,6 +103,7 @@ export default function createRouters(app: Application<HistoryMode>) {
     title: '列表',
     sidebar: true,
   }, () => import('./plugin')));
+  
   // 模块
   const MODULE = app.bind('/module', 
     withMiddleware(WebSocket, { room: '/installing' }), 

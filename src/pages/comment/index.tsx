@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 import { useRequestParam, useRequestQuery } from '@codixjs/codix';
-import { useAsync } from '@codixjs/fetch';
-import { Col, Row, List, Avatar, Space, Typography, Spin, Divider, Pagination } from 'antd';
-import React, { Fragment } from 'react';
-import { getControlCommentsByArticle, TArticleEntity, TCommentState, useBaseRequestConfigs } from '../../service';
+import { useAsync, useAsyncCallback } from '@codixjs/fetch';
+import { Col, Row, Avatar, Space, Typography, Spin, Divider, Pagination, Popconfirm, message } from 'antd';
+import React, { useCallback } from 'react';
+import { getControlCommentsByArticle, TArticleEntity, TCommentState, useBaseRequestConfigs, deleteComment } from '../../service';
 import { numberic } from '../../utils';
 import styles from './index.module.less';
 import { Flex } from '../../components';
@@ -17,7 +17,7 @@ export default function CommentPage() {
   const page = useRequestQuery('page', numberic(1)) as number;
   const size = useRequestQuery('size', numberic(10)) as number;
   const configs = useBaseRequestConfigs();
-  const { data, loading } = useAsync(
+  const { data, loading, execute } = useAsync(
     `comment:${id}:page:${page}:size:${size}`, 
     () => getControlCommentsByArticle(id, page, size, configs),
     [id, page, size]
@@ -39,8 +39,8 @@ export default function CommentPage() {
             return <Col span={24} key={chunk.id}>
               {
                 !!data.article
-                  ? <ListB {...chunk} />
-                  : <ListA {...chunk} />
+                  ? <ListB {...chunk} reload={execute} />
+                  : <ListA {...chunk} reload={execute} />
               }
             </Col>
           })}
@@ -48,7 +48,7 @@ export default function CommentPage() {
       </Spin>
     </Col>
     <Col span={24}>
-      <Pagination current={page} pageSize={size} onChange={(a, b) => redirect(a, b)} />
+      <Pagination current={page} pageSize={size} total={data.total} onChange={(a, b) => redirect(a, b)} />
     </Col>
   </Row>
 }
@@ -60,7 +60,7 @@ function Article(props: React.PropsWithoutRef<TArticleEntity>) {
   </div>
 }
 
-function ListA(props: React.PropsWithoutRef<TCommentState>) {
+function ListA(props: React.PropsWithoutRef<TCommentState & { reload: () => void }>) {
   const locationB = usePath('ARTICLE_COMMENT');
   return <div className={styles.container}>
     <Space direction="vertical" style={{ width: '100%' }}>
@@ -81,6 +81,8 @@ function ListA(props: React.PropsWithoutRef<TCommentState>) {
             发表于：{dayjs(props.ctime).format('YYYY-MM-DD HH:mm:ss')}
             <Divider type="vertical" />
             来自：{props.ip}
+            <Divider type="vertical" />
+            <DeleteComment id={props.id} reload={props.reload} />
           </div>
         </div>
       </Flex>
@@ -89,7 +91,7 @@ function ListA(props: React.PropsWithoutRef<TCommentState>) {
   </div>
 }
 
-function ListB(props: React.PropsWithoutRef<TCommentState>) {
+function ListB(props: React.PropsWithoutRef<TCommentState & { reload: () => void }>) {
   return <div className={styles.container}>
     <Space direction="vertical" style={{ width: '100%' }}>
       <Flex block gap={8}>
@@ -100,6 +102,8 @@ function ListB(props: React.PropsWithoutRef<TCommentState>) {
             发表于：{dayjs(props.ctime).format('YYYY-MM-DD HH:mm:ss')}
             <Divider type="vertical" />
             来自：{props.ip}
+            <Divider type="vertical" />
+            <DeleteComment id={props.id} reload={props.reload} />
           </div>
         </div>
       </Flex>
@@ -107,10 +111,26 @@ function ListB(props: React.PropsWithoutRef<TCommentState>) {
       <div className={styles.reply}>
         {
           !!props.replies && !!props.replies.length && props.replies.map(reply => {
-            return <ListB {...reply} key={reply.id} />
+            return <ListB {...reply} key={reply.id} reload={props.reload} />
           })
         }
       </div>
     </Space>
   </div>
+}
+
+function DeleteComment(props: React.PropsWithoutRef<{ id: number, reload: () => void }>) {
+  const { execute, loading } = useAsyncCallback(deleteComment);
+  const submit = useCallback(() => {
+    execute(props.id)
+      .then(props.reload)
+      .then(() => message.success('删除成功'))
+      .catch(e => message.error(e.message));
+  }, [])
+  return <Popconfirm
+    title="确定删除这条评论？"
+    onConfirm={submit}
+    okText="取消"
+    cancelText="确定"
+  ><Typography.Link disabled={loading}>删除</Typography.Link></Popconfirm>
 }

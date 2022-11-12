@@ -11,30 +11,18 @@ import { colors } from './colors';
 import { Search } from './search';
 import { Box } from './box';
 import { Item } from './item';
+import { useAdminInfo } from '../../layout/context';
+import { TUserInfo } from '../../service';
 
-const banner = [
-  '    Xterm.js is the frontend component that powers many terminals including',
-  '                           \x1b[3mVS Code\x1b[0m, \x1b[3mHyper\x1b[0m and \x1b[3mTheia\x1b[0m!',
-  '',
-  ' ┌ \x1b[1mFeatures\x1b[0m ──────────────────────────────────────────────────────────────────┐',
-  ' │                                                                            │',
-  ' │  \x1b[31;1mApps just work                         \x1b[32mPerformance\x1b[0m                        │',
-  ' │   Xterm.js works with most terminal      Xterm.js is fast and includes an  │',
-  ' │   apps like bash, vim and tmux           optional \x1b[3mWebGL renderer\x1b[0m           │',
-  ' │                                                                            │',
-  ' │  \x1b[33;1mAccessible                             \x1b[34mSelf-contained\x1b[0m                     │',
-  ' │   A screen reader mode is available      Zero external dependencies        │',
-  ' │                                                                            │',
-  ' │  \x1b[35;1mUnicode support                        \x1b[36mAnd much more...\x1b[0m                   │',
-  ' │   Supports CJK 語 and emoji \u2764\ufe0f            \x1b[3mLinks\x1b[0m, \x1b[3mthemes\x1b[0m, \x1b[3maddons\x1b[0m,            │',
-  ' │                                          \x1b[3mtyped API\x1b[0m, \x1b[3mdecorations\x1b[0m            │',
-  ' │                                                                            │',
-  ' └────────────────────────────────────────────────────────────────────────────┘',
-  ''
-]
+const banner = (admin: TUserInfo) => `Hello \x1b[31;1m${admin.nickname}\x1b[0m:
+  Logined with account \x1b[32m${admin.account}\x1b[0m.
+  Now the module installer for PJBlog is running...
+  You can enter the module name in the input box on the right to download and install,
+  Information about the installation process will be shown \x1b[34mbelow\x1b[0m ...\n\n`
 
 export default function ModulePage() {
   const socket = useSocket();
+  const admin = useAdminInfo();
   const ref = useRef<HTMLDivElement>();
   const [term, setTerm] = useState(null);
   const [current, setCurrent] = useState<TState>(null);
@@ -45,7 +33,7 @@ export default function ModulePage() {
   }, [socket]);
 
   useEffect(() => {
-    if (ref.current) {
+    if (ref.current && admin.account) {
       const _term = new Terminal({
         rows: 40,
         theme: colors,
@@ -62,13 +50,13 @@ export default function ModulePage() {
       _term.open(ref.current);
       _term.loadAddon(new CanvasAddon());
       fitAddon.fit();
-      _term.write(banner.join('\n\r'));
+      _term.write(banner(admin));
       setTerm(_term);
       return () => {
         _term.dispose();
       }
     }
-  }, [ref.current]);
+  }, [ref.current, admin]);
 
   useEffect(() => {
     if (socket && term) {

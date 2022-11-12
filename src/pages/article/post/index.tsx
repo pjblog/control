@@ -5,9 +5,9 @@ import CodeMirror from '@uiw/react-codemirror';
 import { useRequestParam } from '@codixjs/codix';
 import { useAsync, useAsyncCallback, useClient } from '@codixjs/fetch';
 import { Button, Space, Input, Tooltip, message, Divider } from 'antd';
-import { getArticle, useBaseRequestConfigs, TArticlePostData, addNewArticle, updateArticleById, getPreview } from '../../../service';
+import { getArticle, useBaseRequestConfigs, TArticlePostData, addNewArticle, updateArticleById } from '../../../service';
 import { numberic } from '../../../utils';
-import { Flex, Loading } from '../../../components';
+import { Flex, Loading, useSocket } from '../../../components';
 import { CategorySelect } from './category';
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { languages } from '@codemirror/language-data';
@@ -15,8 +15,15 @@ import { EyeOutlined, EyeInvisibleOutlined, CheckOutlined, ArrowLeftOutlined } f
 import { Tags } from './tags';
 import { usePath } from '../../../hooks';
 
+interface TPreview {
+  headings: any[],
+  html: string,
+  summary: string,
+}
+
 export default function ArticleBoxPage() {
   const configs = useBaseRequestConfigs();
+  const socket = useSocket();
   const client = useClient();
   const Article = usePath('ARTICLE');
   const id = useRequestParam('id', numberic(0)) as number;
@@ -26,17 +33,15 @@ export default function ArticleBoxPage() {
   const [viewHTML, setViewHTML] = useState(false);
   const [category, setCategory] = useState(data.category);
   const [tags, setTags] = useState<string[]>(data.tags);
-  const timer = useRef(null);
-
-  const previewValue = useDeferredValue(value);
-  const preview = useAsyncCallback(getPreview, {
+  const [preview, setPreview] = useState<TPreview>({
     headings: [],
     html: '',
     summary: ''
-  });
+  })
 
-  const html = preview.data.html;
-  const summary = preview.data.summary;
+  const previewValue = useDeferredValue(value);
+  const html = preview.html;
+  const summary = preview.summary;
   const postData: TArticlePostData = {
     title, category, tags,
     content: value,
@@ -61,6 +66,8 @@ export default function ArticleBoxPage() {
     if (id > 0) {
       updateArticle.execute()
         .then(() => client.reload('articles'))
+        .then(() => client.reload('categories:unoutable'))
+        .then(() => client.reload('categories'))
         .then(execute)
         .then(() => message.success('更新文章成功，正在返回文章列表'))
         .then(() => path.redirect())
@@ -75,10 +82,20 @@ export default function ArticleBoxPage() {
   }
 
   useEffect(() => {
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => preview.execute(previewValue), 300);
-    return () => clearTimeout(timer.current);
-  }, [previewValue])
+    if (socket) {
+      const handler = (text: TPreview) => setPreview(text);
+      socket.on('markdown', handler);
+      return () => {
+        socket.off('markdown', handler);
+      }
+    }
+  }, [socket])
+
+  useEffect(() => {
+    if (socket) {
+      socket.emit('markdown', previewValue);
+    }
+  }, [previewValue, socket])
 
   useEffect(() => {
     setTitle(data.title);

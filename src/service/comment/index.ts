@@ -16,3 +16,8 @@ export async function getControlCommentsByArticle(aid: number = 0, page: number,
   );
   return res.data;
 }
+
+export async function deleteComment(cid: number) {
+  const res = await request.delete('/comment/' + cid);
+  return res.data;
+}

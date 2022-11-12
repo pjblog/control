@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { getCategories, BlogCategoryEntity, createNewBlogCategoryEntity, updateCategory, updateCategoryOrder, deleteCategory, useBaseRequestConfigs, addCategory } from '../../service';
-import { useAsync, useAsyncCallback } from '@codixjs/fetch';
+import { useAsync, useAsyncCallback, useClient } from '@codixjs/fetch';
 import { Typography, Input, message, Popconfirm, Select } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { EditableTable, TGetColumns } from '../../components';
@@ -88,11 +88,13 @@ export default function CategoryPage() {
     ]
   }, []);
 
+  const client = useClient();
   const post = useCallback((r: BlogCategoryEntity) => {
     const promise = !r.id
       ? ADD.execute(r.cate_name, r.cate_outable, r.cate_outlink)
       : UPDATE.execute(r.id, r.cate_name, r.cate_outlink)
     promise
+      .then(() => client.reload('categories:unoutable'))
       .then(execute)
       .then(() => message.success(!r.id ? '新增成功' : '更新成功'))
       .catch(e => message.error(e.message))

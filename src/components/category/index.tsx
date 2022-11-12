@@ -13,7 +13,7 @@ export function Categories(props: React.PropsWithoutRef<{
   const total = useMemo(() => data.reduce((prev, next) => prev + Number(next.count), 0), [data])
   return <Flex gap={16}>
     <Flex span={1}>
-      <Tag.CheckableTag checked={props.value === 0} onClick={() => props.setValue(0)}>全部({total})</Tag.CheckableTag>
+      <Tag.CheckableTag checked={props.value === -1} onClick={() => props.setValue(-1)}>全部({total})</Tag.CheckableTag>
       {
         data.map(category => {
           return <Tag.CheckableTag 
@@ -23,6 +23,7 @@ export function Categories(props: React.PropsWithoutRef<{
           >{category.name}({category.count})</Tag.CheckableTag>
         })
       }
+      <Tag.CheckableTag checked={props.value === 0} onClick={() => props.setValue(0)}>回收站</Tag.CheckableTag>
     </Flex>
   </Flex>
 }

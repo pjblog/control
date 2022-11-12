@@ -1,5 +1,5 @@
 import { Divider, Typography, Popconfirm, message, Space, Avatar, Checkbox } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import styles from './index.module.less';
 import { redirect } from '@codixjs/codix';
@@ -15,14 +15,19 @@ export function Article(props: React.PropsWithoutRef<TArticle & { reload: () => 
       .catch(e => message.error(e.message));
   }
   return <div className={styles.article}>
-    <Typography.Title level={4}>{props.title} <span>{props.category.name}</span></Typography.Title>
+    <Typography.Title level={4}>{props.title}</Typography.Title>
     <Typography.Paragraph>
       <CommentAble id={props.id} value={props.commentable} />
-      <Divider type="vertical" />
-      <Space>
-        <span className={styles.ln}>分类</span>
-        <span className={styles.lv}>{props.category.name}</span>
-      </Space>
+      
+      {
+        !!props?.category?.id && <Fragment>
+          <Divider type="vertical" />
+          <Space>
+            <span className={styles.ln}>分类</span>
+            <span className={styles.lv}>{props.category.name}</span>
+          </Space>
+        </Fragment>
+      }
       <Divider type="vertical" />
       {
         !!props.tags.length && <Space>

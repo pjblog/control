@@ -60,7 +60,7 @@ export const menus: TMenus = [
     code: 'LINK'
   },
   {
-    label: '模块',
+    label: '模块安装',
     icon: <PieChartFilled />,
     code: 'MODULE'
   },

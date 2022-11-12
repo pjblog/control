@@ -1,18 +1,19 @@
 {
   "name": "@pjblog/control",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "pjblog control manager",
   "main": "index.js",
   "scripts": {
     "dev": "npm run dev:spa",
     "dev:spa": "vite --host",
     "dev:ssr": "SSR=true vite --host",
-    "build": "rm -rf dist && npm run build:spa && npm run build:ssr",
+    "build": "rm -rf dist && npm run build:spa",
     "build:spa": "KIND=spa vite build",
     "build:client": "KIND=client vite build",
     "build:server": "KIND=server vite build",
     "build:ssr": "npm run build:client && npm run build:server",
-    "start": "node server.js"
+    "start": "node server.js",
+    "pub": "npm run build && git add . && git commit -am 'update' && git push && npm publish"
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
