@@ -1,17 +1,17 @@
-import React, { useEffect, useMemo, useState, Suspense, useDeferredValue } from 'react';
+import React, { useEffect, useMemo, useState, Suspense, useDeferredValue, Fragment } from 'react';
 import styles from './index.module.less';
 import classnames from 'classnames';
 import CodeMirror from '@uiw/react-codemirror';
 import { useRequestParam } from '@codixjs/codix';
 import { useAsync, useAsyncCallback, useClient } from '@codixjs/fetch';
-import { Button, Space, Input, Tooltip, message, Divider, Dropdown, Popover, Empty, Segmented } from 'antd';
+import { Button, Space, Input, Tooltip, message, Divider, Dropdown, Modal, Segmented, Checkbox } from 'antd';
 import { getArticle, useBaseRequestConfigs, TArticlePostData, addNewArticle, updateArticleById } from '../../../service';
 import { numberic } from '../../../utils';
 import { Flex, Loading, useSocket } from '../../../components';
 import { CategorySelect } from './category';
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { languages } from '@codemirror/language-data';
-import { CheckOutlined, ArrowLeftOutlined, CaretDownOutlined } from '@ant-design/icons';
+import { CheckOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { Tags } from './tags';
 import { usePath } from '../../../hooks';
 import { SegmentedLabeledOption } from 'antd/lib/segmented';
@@ -48,6 +48,7 @@ export default function ArticleBoxPage() {
   const { data, execute } = useAsync('article:' + id, () => getArticle(id, configs), [id]);
   const [title, setTitle] = useState<string>(data.title);
   const [value, setValue] = useState<string>(data.content);
+  const [autoSave, setAutoSave] = useState(false);
   const [viewHTML, setViewHTML] = useState(false);
   const [category, setCategory] = useState(data.category);
   const [tags, setTags] = useState<string[]>(data.tags);
@@ -84,6 +85,7 @@ export default function ArticleBoxPage() {
     if (!summary) return message.warn('请输入摘要内容');
     if (id > 0) {
       updateArticle.execute()
+        .then(() => !!socket && socket.emit('cleanup', id))
         .then(() => client.reload('articles'))
         .then(() => client.reload('categories:unoutable'))
         .then(() => client.reload('categories'))
@@ -93,6 +95,7 @@ export default function ArticleBoxPage() {
         .catch(e => message.error(e.message));
     } else {
       newArticle.execute()
+        .then(() => !!socket && socket.emit('cleanup', id))
         .then(() => client.reload('articles'))
         .then(() => message.success('发布文章成功，正在返回文章列表'))
         .then(() => path.redirect())
@@ -107,6 +110,7 @@ export default function ArticleBoxPage() {
     }
   })
 
+  // 预览markdown内容
   useEffect(() => {
     if (socket) {
       const handler = (text: TPreview) => setPreview(text);
@@ -117,11 +121,55 @@ export default function ArticleBoxPage() {
     }
   }, [socket])
 
+  // 编译markdown内容
   useEffect(() => {
     if (socket) {
       socket.emit('markdown', previewValue);
     }
   }, [previewValue, socket])
+
+  // 自动保存
+  useEffect(() => {
+    if (socket && autoSave) {
+      socket.emit('autosave', id, previewValue);
+    }
+  }, [socket, autoSave, previewValue])
+
+  // 加载新内容
+  useEffect(() => {
+    if (socket) {
+      const handler = (text: string) => setValue(text);
+      socket.on('fetch', handler);
+      return () => {
+        socket.off('fetch', handler);
+      }
+    }
+  }, [socket])
+
+  // 是否有新内容
+  useEffect(() => {
+    if (socket) {
+      const handler = (newable: boolean) => {
+        if (newable) {
+          const modal = Modal.confirm({
+            title: '发现过往未保存的内容',
+            content: '是否加载这些内容？',
+            okText: '加载',
+            cancelText: '忽略',
+            onOk: () => {
+              socket.emit('fetch', id);
+              modal.destroy();
+            }
+          })
+        }
+      }
+      socket.on('newable', handler);
+      socket.emit('newable', id, data.md5);
+      return () => {
+        socket.off('newable', handler);
+      }
+    }
+  }, [socket, id]);
 
   useEffect(() => {
     setTitle(data.title);
@@ -146,8 +194,9 @@ export default function ArticleBoxPage() {
     </Flex>
     <Flex className={styles.editorContent} span={1} block>
       <Flex span={1} direction="vertical" scroll="hide" full>
-        <Flex className={styles.tip} align="right" valign="middle">
+        <Flex className={styles.tip} align="between" valign="middle">
           <Button type="primary">编辑区</Button>
+          <Checkbox checked={autoSave} onChange={e => setAutoSave(e.target.checked)}>内容防丢</Checkbox>
         </Flex>
         <Flex span={1} block scroll="y">
           <div className={styles.content}>
@@ -201,6 +250,12 @@ export default function ArticleBoxPage() {
         <strong>{ canPost ? '可以保存' : '不可保存'}</strong>
       </div>
       <div>
+        {
+          !!data.md5 && <Fragment>
+            <span>MD5: {data.md5}</span>
+            <Divider type="vertical" />
+          </Fragment>
+        }
         <span>字数：{value.length}个</span>
         <Divider type="vertical" />
         <span>行数：{value.split('\n').length}行</span>

@@ -29,6 +29,7 @@ export interface TArticleProps {
   content: string,
   category: number,
   tags: string[],
+  md5?: string,
 }
 
 export interface TMarkdownCompileResult {
