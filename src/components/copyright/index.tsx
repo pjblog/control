@@ -10,7 +10,7 @@ export function CopyRight() {
       <Divider type="vertical" />
       <span>BSD Licensed</span>
       <Divider type="vertical" />
-      <Typography.Link href="https://gitlab.baizhun.cn/ecosystem/baizhun.publish.system" target="_blank"><GithubOutlined /> Github</Typography.Link>
+      <Typography.Link href="https://github.com/pjblog" target="_blank"><GithubOutlined /> Github / pjblog</Typography.Link>
     </Typography.Text>
     <Typography.Text>
       <span>Copyright <CopyrightOutlined />2004-present</span>

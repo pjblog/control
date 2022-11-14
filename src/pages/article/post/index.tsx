@@ -195,7 +195,7 @@ export default function ArticleBoxPage() {
     <Flex className={styles.editorContent} span={1} block>
       <Flex span={1} direction="vertical" scroll="hide" full>
         <Flex className={styles.tip} align="between" valign="middle">
-          <Button type="primary">编辑区</Button>
+          <Button type="text">编辑区</Button>
           <Checkbox checked={autoSave} onChange={e => setAutoSave(e.target.checked)}>内容防丢</Checkbox>
         </Flex>
         <Flex span={1} block scroll="y">
@@ -212,7 +212,7 @@ export default function ArticleBoxPage() {
       </Flex>
       <Flex span={1} direction="vertical" scroll="hide" full>
         <Flex className={styles.tip} align="between" valign="middle">
-          <Dropdown.Button menu={{ items: menus, onClick: e => goMarked(e.key) }} type="primary">预览区</Dropdown.Button>
+          <Dropdown.Button menu={{ items: menus, onClick: e => goMarked(e.key) }} type="text">预览区</Dropdown.Button>
           <Space className={styles.toolbar}>
             <Segmented options={viewMode} value={Number(viewHTML)} onChange={e => setViewHTML(Boolean(Number(e.toString())))} />
           </Space>
