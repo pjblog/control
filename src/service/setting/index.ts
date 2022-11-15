@@ -54,3 +54,8 @@ export async function getPluginDetail(plugin: string, configs?: AxiosRequestConf
   const res = await request.get<TPluginDetailState>('/control/plugin/' + plugin, configs);
   return res.data;
 }
+
+export async function setPluginConfigs<T>(plugin: string, data: T) {
+  const res = await request.put<number>('/control/plugin/' + plugin, data);
+  return res.data;
+}

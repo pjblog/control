@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo } from 'react';
 import styles from './index.module.less';
 import { useRequestParam } from '@codixjs/codix';
-import { useAsync } from '@codixjs/fetch';
-import { Avatar, Col, Divider, Row, Space, Typography, Result, Button } from 'antd';
-import { getPluginDetail, useBaseRequestConfigs } from '../../../service';
+import { useAsync, useAsyncCallback } from '@codixjs/fetch';
+import { Avatar, Col, Divider, Row, Space, Typography, Result, Button, message } from 'antd';
+import { getPluginDetail, setPluginConfigs, useBaseRequestConfigs } from '../../../service';
 import { Fields } from '../../../components';
 import { UnInstall } from '../uninstall';
 import { usePath } from '../../../hooks';
@@ -21,6 +21,7 @@ export default function PluginDetail() {
   const name = useRequestParam<string>('plugin');
   const configs = useBaseRequestConfigs();
   const { data, setData, error } = useAsync('plugin:' + name, () => getPluginDetail(name, configs), [name]);
+  const save = useAsyncCallback(setPluginConfigs);
   const submit = useCallback((val: any) => {
     setData({
       ...data,
@@ -41,6 +42,12 @@ export default function PluginDetail() {
     }
     return pools;
   }, [data?.extends]);
+
+  const onSave = useCallback(() => {
+    save.execute(name, data.configs.value)
+      .then(() => message.success('保存成功'))
+      .catch(e => message.error(e.message));
+  }, [name, data?.configs?.value])
 
   if (error?.code) return <Result
     status={error.code}
@@ -100,7 +107,9 @@ export default function PluginDetail() {
           变量配置
         </Space>
       </Typography.Title>
-      <Fields dataSource={data.configs.value} schemas={data.configs.rule} gutter={[12, 12]} onChange={submit} />
+      <Fields dataSource={data.configs.value} schemas={data.configs.rule} gutter={[12, 12]} onChange={submit}>
+        <Button type="primary" loading={save.loading} onClick={onSave}>保存</Button>
+      </Fields>
     </Col>
   </Row>
 }

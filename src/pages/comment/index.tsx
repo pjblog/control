@@ -8,7 +8,7 @@ import { numberic } from '../../utils';
 import styles from './index.module.less';
 import { Flex } from '../../components';
 import { usePath } from '../../hooks';
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, CommentOutlined } from '@ant-design/icons';
 
 export default function CommentPage() {
   const locationA = usePath('COMMENT');
@@ -38,7 +38,7 @@ export default function CommentPage() {
   return <Row gutter={[24, 24]}>
     {!!data.article && <Col span={24}><Article {...data.article} /></Col>}
     <Col span={24}>
-      <Typography.Title level={5}>评论列表</Typography.Title>
+      <Typography.Title level={5}><Space><CommentOutlined />评论列表</Space></Typography.Title>
     </Col>
     <Col span={24}>
       <Spin spinning={loading}>

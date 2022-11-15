@@ -16,8 +16,8 @@ export function Number(props: React.PropsWithoutRef<{
       onChange={e => props.onChange(e)} 
     />
     <span className={styles.unit}>{unit || null}</span>
-    <Divider type="vertical" />
-    <span>最小：{_props.min || '无限'}</span>
-    <span>最大：{_props.max || '无限'}</span>
+    {_props.min !== undefined || _props.max !== undefined && <Divider type="vertical" />}
+    {_props.min !== undefined && <span>MIN:{_props.min}</span>}
+    {_props.max !== undefined && <span>MAX:{_props.max}</span>}
   </Space>
 }

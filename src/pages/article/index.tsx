@@ -8,6 +8,7 @@ import { Article } from './single';
 import { Flex, Loading, Categories } from '../../components';
 import { Col, Input, Row, Pagination, Spin, Empty, Space, Typography } from 'antd';
 import { usePath } from '../../hooks';
+import { FunnelPlotOutlined } from '@ant-design/icons';
 
 export default function ArticlePage() {
   const configs = useBaseRequestConfigs();
@@ -23,7 +24,7 @@ export default function ArticlePage() {
     <div className={styles.conditions}>
       <Row gutter={[0, 24]}>
         <Col span={24}>
-          <Typography.Paragraph style={{ fontWeight: 500 }}>分类筛选</Typography.Paragraph>
+          <Typography.Paragraph style={{ fontWeight: 500 }}><Space><FunnelPlotOutlined />分类筛选</Space></Typography.Paragraph>
           <Suspense fallback={<Loading />}>
             <Categories value={category} setValue={setCategory} />
           </Suspense>

@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import styles from './index.module.less';
 import { EditableTable, TGetColumns } from '../../components';
 import { useAsync, useAsyncCallback } from '@codixjs/fetch';
+import { FilterOutlined } from '@ant-design/icons';
 import { Col, message, Row, Typography, Popconfirm, Space, Radio, Input } from 'antd';
 import { getLinks, useBaseRequestConfigs, TLinkState, createNewLinkState, addLink, updateLink, deleteLink, updateLinkStatus } from '../../service';
 
@@ -129,14 +130,12 @@ export default function LinkPage() {
   }, [status, data])
   return <Row gutter={[24, 24]}>
     <Col span={24}>
-      <Space size="large">
-        <span>过滤</span>
-        <Radio.Group onChange={e => setStatus(e.target.value)} value={status}>
-          <Radio value={0}>全部</Radio>
-          <Radio value={1}>已通过</Radio>
-          <Radio value={-1}>待审核</Radio>
-        </Radio.Group>
-      </Space>
+      <Typography.Title level={5}><Space><FilterOutlined />过滤</Space></Typography.Title>
+      <Radio.Group onChange={e => setStatus(e.target.value)} value={status}>
+        <Radio value={0}>全部</Radio>
+        <Radio value={1}>已通过</Radio>
+        <Radio value={-1}>待审核</Radio>
+      </Radio.Group>
     </Col>
     <Col span={24}>
       <EditableTable<TLinkState> 
