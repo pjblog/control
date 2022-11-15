@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { useRequestParam, useRequestQuery } from '@codixjs/codix';
 import { useAsync, useAsyncCallback } from '@codixjs/fetch';
-import { Col, Row, Avatar, Space, Typography, Spin, Divider, Pagination, Popconfirm, message } from 'antd';
+import { Col, Row, Avatar, Space, Typography, Spin, Divider, Pagination, Popconfirm, message, Result, Button } from 'antd';
 import React, { useCallback } from 'react';
 import { getControlCommentsByArticle, TArticleEntity, TCommentState, useBaseRequestConfigs, deleteComment } from '../../service';
 import { numberic } from '../../utils';
@@ -17,16 +17,24 @@ export default function CommentPage() {
   const page = useRequestQuery('page', numberic(1)) as number;
   const size = useRequestQuery('size', numberic(10)) as number;
   const configs = useBaseRequestConfigs();
-  const { data, loading, execute } = useAsync(
+  const { data, loading, execute, error } = useAsync(
     `comment:${id}:page:${page}:size:${size}`, 
     () => getControlCommentsByArticle(id, page, size, configs),
     [id, page, size]
   );
+
   const redirect = (page: number, size: number) => {
     return !!data.article
       ? locationB.redirect({ id }, { page: page + '', size: size + '' })
       : locationA.redirect({}, { page: page + '', size: size + '' })
   }
+
+  if (error?.code) return <Result
+    status={error.code}
+    title={error.code}
+    subTitle={error.message}
+  />
+
   return <Row gutter={[24, 24]}>
     {!!data.article && <Col span={24}><Article {...data.article} /></Col>}
     <Col span={24}>

@@ -5,7 +5,7 @@ export interface TBlogPackageMarker {
   pjblog: {
     type: 'theme' | 'plugin',
     icon: string,
-    plugins?: Record<string, string>, // 主题
+    extends?: Record<string, string>, // 主题
     previews?: string[],
   }
 }
@@ -16,4 +16,5 @@ export type TBlogPackageState = TBlogPackageMarker['pjblog'] & {
   version: string,
   name: string,
   description: string,
+  README: string,
 }

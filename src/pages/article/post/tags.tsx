@@ -31,7 +31,7 @@ export function Tags(props: React.PropsWithoutRef<{
   }, [mode])
   return <Flex valign="middle">
     <span style={{ marginRight: 12 }}>文章标签</span>
-    {props.value.map(val => <Tag key={val} closable onClose={() => del(val)}>{val}</Tag>)}
+    {(props.value || []).map(val => <Tag key={val} closable onClose={() => del(val)}>{val}</Tag>)}
     {!!mode && <Input 
       className={styles.tagInput}
       value={value} 

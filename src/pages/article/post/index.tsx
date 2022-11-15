@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import CodeMirror from '@uiw/react-codemirror';
 import { useRequestParam } from '@codixjs/codix';
 import { useAsync, useAsyncCallback, useClient } from '@codixjs/fetch';
-import { Button, Space, Input, Tooltip, message, Divider, Dropdown, Modal, Segmented, Checkbox } from 'antd';
+import { Button, Space, Input, Tooltip, message, Divider, Dropdown, Modal, Segmented, Checkbox, Result } from 'antd';
 import { getArticle, useBaseRequestConfigs, TArticlePostData, addNewArticle, updateArticleById } from '../../../service';
 import { numberic } from '../../../utils';
 import { Flex, Loading, useSocket } from '../../../components';
@@ -45,13 +45,13 @@ export default function ArticleBoxPage() {
   const client = useClient();
   const Article = usePath('ARTICLE');
   const id = useRequestParam('id', numberic(0)) as number;
-  const { data, execute } = useAsync('article:' + id, () => getArticle(id, configs), [id]);
-  const [title, setTitle] = useState<string>(data.title);
-  const [value, setValue] = useState<string>(data.content);
+  const { data, execute, error } = useAsync('article:' + id, () => getArticle(id, configs), [id]);
+  const [title, setTitle] = useState<string>(data?.title);
+  const [value, setValue] = useState<string>(data?.content);
   const [autoSave, setAutoSave] = useState(false);
   const [viewHTML, setViewHTML] = useState(false);
-  const [category, setCategory] = useState(data.category);
-  const [tags, setTags] = useState<string[]>(data.tags);
+  const [category, setCategory] = useState(data?.category);
+  const [tags, setTags] = useState<string[]>(data?.tags || []);
   const [preview, setPreview] = useState<TPreview>({
     headings: [],
     html: '',
@@ -59,8 +59,8 @@ export default function ArticleBoxPage() {
   })
 
   const previewValue = useDeferredValue(value);
-  const html = preview.html;
-  const summary = preview.summary;
+  const html = preview.html || '';
+  const summary = preview.summary || '';
   const headings = preview.headings;
   const postData: TArticlePostData = {
     title, category, tags,
@@ -68,7 +68,7 @@ export default function ArticleBoxPage() {
   }
 
   const canPost = useMemo(() => {
-    if (title.length && title.length <= 255 && !!category && !!value.length && !!summary && summary.trim().length) return true;
+    if (title?.length && title.length <= 255 && !!category && !!value.length && !!summary && summary.trim().length) return true;
     return false;
   }, [title, category, value, summary]);
 
@@ -164,7 +164,7 @@ export default function ArticleBoxPage() {
         }
       }
       socket.on('newable', handler);
-      socket.emit('newable', id, data.md5);
+      socket.emit('newable', id, data?.md5);
       return () => {
         socket.off('newable', handler);
       }
@@ -172,11 +172,18 @@ export default function ArticleBoxPage() {
   }, [socket, id]);
 
   useEffect(() => {
-    setTitle(data.title);
-    setValue(data.content);
-    setCategory(data.category);
-    setTags(data.tags);
-  }, [data.title, data.content, data.category, data.tags])
+    setTitle(data?.title);
+    setValue(data?.content);
+    setCategory(data?.category);
+    setTags(data?.tags);
+  }, [data?.title, data?.content, data?.category, data?.tags])
+
+  if (error?.code) return <Result
+    status={error.code}
+    title={error.code}
+    subTitle={error.message}
+    extra={<Button type="primary" onClick={() => Article.redirect()}>返回</Button>}
+  />
 
   return <Flex block full scroll="hide" direction="vertical" className={styles.editor}>
     <Flex block className={styles.editorTitle} valign="middle">
@@ -232,11 +239,11 @@ export default function ArticleBoxPage() {
       <div>
         <span style={{ marginRight: 12 }}>文章保存条件:</span>
         <Space>标题<CheckOutlined className={classnames(styles.checker, {
-          [styles.allowed]: !!title.length
+          [styles.allowed]: !!title?.length
         })} /></Space>
         <Divider type="vertical" />
         <Space>内容<CheckOutlined className={classnames(styles.checker, {
-          [styles.allowed]: !!value.length
+          [styles.allowed]: !!value?.length
         })} /></Space>
         <Divider type="vertical" />
         <Space>分类<CheckOutlined className={classnames(styles.checker, {
@@ -251,14 +258,14 @@ export default function ArticleBoxPage() {
       </div>
       <div>
         {
-          !!data.md5 && <Fragment>
+          !!data?.md5 && <Fragment>
             <span>MD5: {data.md5}</span>
             <Divider type="vertical" />
           </Fragment>
         }
-        <span>字数：{value.length}个</span>
+        <span>字数：{value?.length}个</span>
         <Divider type="vertical" />
-        <span>行数：{value.split('\n').length}行</span>
+        <span>行数：{value?.split('\n').length}行</span>
       </div>
     </Flex>
   </Flex>

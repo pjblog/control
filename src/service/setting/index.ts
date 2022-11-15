@@ -1,5 +1,5 @@
 import { request } from '../request';
-import type { TBlogSettingProps, TConfigsGroup, TDiskState } from './types';
+import type { TBlogSettingProps, TConfigsGroup, TDiskState, TPluginDetailState } from './types';
 import type { AxiosRequestConfig } from 'axios';
 export * from './types';
 export async function getConfigs(configs?: AxiosRequestConfig) {
@@ -30,8 +30,13 @@ export async function setTheme(theme: string) {
   return res.data;
 }
 
-export async function uninstall(name: string) {
+export async function uninstallTheme(name: string) {
   const res = await request.delete('/control/theme/' + name);
+  return res.data;
+}
+
+export async function uninstallPlugin(name: string) {
+  const res = await request.delete('/control/plugin/' + name);
   return res.data;
 }
 
@@ -42,5 +47,10 @@ export async function checkUpdate(name: string) {
 
 export async function getModuleStatistic(configs?: AxiosRequestConfig) {
   const res = await request.get<{ themes: number, plugins: number }>('/control/statistic/modules', configs);
+  return res.data;
+}
+
+export async function getPluginDetail(plugin: string, configs?: AxiosRequestConfig) {
+  const res = await request.get<TPluginDetailState>('/control/plugin/' + plugin, configs);
   return res.data;
 }

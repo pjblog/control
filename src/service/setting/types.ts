@@ -1,3 +1,6 @@
+import { TWidgetConfigProp } from "../../components/some/types";
+import { TBlogPackageState } from "../../pages/types";
+
 export type InputType = 'button' 
   | 'checkbox' 
   | 'color' 
@@ -101,12 +104,27 @@ export interface TConfigsGroup {
   
 
 export interface TBlogSettingProps {
-  blog_cache_namespace: string,
-  blog_close: boolean,
-  blog_description: string,
-  blog_login_expires: number,
   blog_name: string,
-  blog_theme: string,
+  blog_domain: string,
+  blog_favicon_url: string,
+  blog_description: string,
+  blog_keywords: string,
+  blog_copyright: string,
+  blog_icp: string,
+  blog_close: boolean,
+  blog_notice: string,
+  blog_registable: boolean,
+  blog_login_expires: number,
+  blog_user_session_expire: number,
+  blog_user_online_expire: number,
+  blog_user_statistic_delay: number,
+  blog_article_size: number,
+  blog_article_search_mode: boolean,
+  blog_article_order_mode: boolean,
+  blog_article_prerender: boolean,
+  blog_article_commentable: boolean,
+  blog_comment_size: number,
+  blog_use_npmmirror: boolean,
   gmt_create: Date,
   gmt_modified: Date,
   id: number,
@@ -119,4 +137,11 @@ export interface TDiskState {
   Available: number,
   Capacity: string,
   Mounted: string,
+}
+
+export interface TPluginDetailState<T = any> extends TBlogPackageState {
+  configs: {
+    rule: TWidgetConfigProp<T>[],
+    value: T,
+  }
 }

@@ -98,11 +98,23 @@ export default function createRouters(app: Application<HistoryMode>) {
   );
 
   // 插件
-  const PLUGIN = app.bind('/plugin', ...withLayout({
-    fallback: <Loading size={36} />,
-    title: '列表',
-    sidebar: true,
-  }, () => import('./plugin')));
+  const PLUGIN = app.bind('/plugin', 
+    withMiddleware(WebSocket, { room: '/modularing' }), 
+    ...withLayout({
+      fallback: <Loading size={36} />,
+      title: '列表',
+      sidebar: true,
+    }, () => import('./plugin'))
+  );
+
+  // 插件详情
+  const PLUGIN_DETAIL = app.bind<{ plugin: string }>('/plugin/:plugin', 
+    ...withLayout({
+      fallback: <Loading size={36} />,
+      title: '详细',
+      sidebar: true,
+    }, () => import('./plugin/detail'))
+  );
   
   // 模块
   const MODULE = app.bind('/module', 
@@ -127,6 +139,7 @@ export default function createRouters(app: Application<HistoryMode>) {
     LINK,
     THEME,
     PLUGIN,
+    PLUGIN_DETAIL,
     MODULE,
     client,
   }
