@@ -45,8 +45,8 @@ export async function checkUpdate(name: string) {
   return res.data;
 }
 
-export async function getModuleStatistic(configs?: AxiosRequestConfig) {
-  const res = await request.get<{ themes: number, plugins: number }>('/control/statistic/modules', configs);
+export async function getVisitorStatistic(configs?: AxiosRequestConfig) {
+  const res = await request.get<{ onlines: number, visitors: number }>('/control/statistic/visitors', configs);
   return res.data;
 }
 

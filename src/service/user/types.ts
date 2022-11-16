@@ -17,3 +17,11 @@ export interface TUserSearchProps {
   admin?: number, 
   forbiden?: number,
 }
+
+export interface TVisitor {
+  id: number,
+  code: string,
+  gmt_create: string | Date,
+  ip: string,
+  user_agent: string,
+}

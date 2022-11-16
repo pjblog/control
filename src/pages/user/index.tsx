@@ -3,10 +3,11 @@ import dayjs from 'dayjs';
 import styles from './index.module.less';
 import { getUsers, useBaseRequestConfigs, TUserInfo, setAdminStatus, setForbidenStatus } from '../../service';
 import { useAsync, useAsyncCallback } from '@codixjs/fetch';
-import { Avatar, message, Select, Switch, Table, Input, Divider, Checkbox, Row, Col } from 'antd';
+import { Avatar, message, Select, Switch, Table, Input, Divider, Checkbox, Row, Col, Space, Button } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Flex } from '../../components';
 import { useAdminInfo } from '../../layout/context';
+import { usePath } from '../../hooks';
 
 function createColumns(me: TUserInfo): ColumnsType<TUserInfo> {
   return [
@@ -68,6 +69,7 @@ function createColumns(me: TUserInfo): ColumnsType<TUserInfo> {
 
 export default function UserPage() {
   const me = useAdminInfo();
+  const VISITOR = usePath('VISITOR');
   const columns = useMemo(() => createColumns(me), [me]);
   const configs = useBaseRequestConfigs();
   const [page, setPage] = useState(1);
@@ -84,11 +86,14 @@ export default function UserPage() {
   return <Row gutter={[24, 24]}>
     <Col span={24}>
       <Flex valign="middle" align="between">
-        <Input.Search enterButton="搜索" autoFocus style={{ width: 300, }} onSearch={e => setKeyword(e)} placeholder="输入搜索的用户ID或者昵称" onChange={e => {
-          if (!e.target.value) {
-            setKeyword(undefined);
-          }
-        }} />
+        <Space>
+          <Button onClick={() => VISITOR.redirect()}>访客统计</Button>
+          <Input.Search enterButton="搜索" autoFocus style={{ width: 300, }} onSearch={e => setKeyword(e)} placeholder="输入搜索的用户ID或者昵称" onChange={e => {
+            if (!e.target.value) {
+              setKeyword(undefined);
+            }
+          }} />
+        </Space>
         <div>
           <Checkbox onChange={e => setAdmin(e.target.checked)}>管理员</Checkbox>
           <Divider type="vertical" />

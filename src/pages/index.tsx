@@ -80,6 +80,12 @@ export default function createRouters(app: Application<HistoryMode>) {
     sidebar: true,
   }, () => import('./user')));
 
+  const VISITOR = app.bind('/user/visitors', ...withLayout({
+    fallback: <Loading size={36} />,
+    title: '访客列表',
+    sidebar: true,
+  }, () => import('./user/visitor')));
+
   // 友情链接
   const LINK = app.bind('/link', ...withLayout({
     fallback: <Loading size={36} />,
@@ -136,6 +142,7 @@ export default function createRouters(app: Application<HistoryMode>) {
     NEW_ARTICLE,
     MODIFY_ARTICLE,
     USER,
+    VISITOR,
     LINK,
     THEME,
     PLUGIN,

@@ -94,15 +94,6 @@ export default function PluginDetail() {
     <Col span={24}>
       <Typography.Title level={5}>
         <Space>
-          <ReadOutlined />
-          插件文档
-        </Space>
-      </Typography.Title>
-      <div dangerouslySetInnerHTML={{ __html: data.README || 'No README.md' }}></div>
-    </Col>
-    <Col span={24}>
-      <Typography.Title level={5}>
-        <Space>
           <SettingOutlined />
           变量配置
         </Space>
@@ -111,5 +102,15 @@ export default function PluginDetail() {
         <Button type="primary" loading={save.loading} onClick={onSave}>保存</Button>
       </Fields>
     </Col>
+    <Col span={24}>
+      <Typography.Title level={5}>
+        <Space>
+          <ReadOutlined />
+          插件文档
+        </Space>
+      </Typography.Title>
+      <div className={styles.html} dangerouslySetInnerHTML={{ __html: data.README || 'No README.md' }}></div>
+    </Col>
+    
   </Row>
 }

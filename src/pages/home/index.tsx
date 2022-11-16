@@ -7,7 +7,7 @@ import { Loading } from '../../components';
 import { ArticleStatistic } from './article-statistic';
 import { UserStatistic } from './user-statistic';
 import { CommentStatistic } from './comment-statistic';
-import { ModuleStatistic } from './module-statistic';
+import { VisitorStatistic } from './visitor-statistic';
 
 export default function HomePage() {
   return <Row gutter={[24, 24]}>
@@ -28,7 +28,7 @@ export default function HomePage() {
     </Col>
     <Col span={6}>
     <Suspense fallback={<Loading />}>
-        <ModuleStatistic />
+        <VisitorStatistic />
       </Suspense>
     </Col>
     <Col span={24}>
