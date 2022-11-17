@@ -12,6 +12,7 @@ import { TextArea } from './textarea';
 import { RadioList } from './radio';
 import { SelectList } from './select';
 import { SwitchBox } from './switch';
+import { Tags } from './tags';
 
 type TKey<V> = TWidgetConfigProp<V>['type']
 const types = {
@@ -24,6 +25,7 @@ const types = {
   radio: RadioList,
   select: SelectList,
   switch: SwitchBox,
+  tags: Tags,
 }
 
 export function Some<V, T extends (TKey<V>)>(props: React.PropsWithoutRef<{

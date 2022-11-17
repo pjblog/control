@@ -71,8 +71,14 @@ export interface TSwitchProps {
   unCheckedChildren?: string,
 }
 
+export interface TTagsProps {
+  direction?: 'horizontal' | 'vertical',
+  text: string,
+  placeholder?: string,
+}
+
 export interface TWidgetConfigProp<U> extends TWidgetConfigBase<U> {
-  type: 'text' | 'number' | 'password' | 'checkbox' | 'checkgroup' | 'textarea' | 'radio' | 'select' | 'switch',
+  type: 'text' | 'number' | 'password' | 'checkbox' | 'checkgroup' | 'textarea' | 'radio' | 'select' | 'switch' | 'tags',
   text?: TInputBaseProps,
   number?: TInputNumberProps,
   password?: TInputBaseProps,
@@ -82,4 +88,5 @@ export interface TWidgetConfigProp<U> extends TWidgetConfigBase<U> {
   radio?: TRadioprops,
   select?: TSelectProps,
   switch?: TSwitchProps,
+  tags?: TTagsProps
 }
