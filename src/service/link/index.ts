@@ -28,3 +28,8 @@ export async function updateLinkStatus(id: number, status: boolean) {
   const res = await request.put('/control/link/' + id + '/status', { status });
   return res.data;
 }
+
+export async function updateLinkTopableStatus(id: number, status: boolean) {
+  const res = await request.put('/control/link/' + id + '/topable', { status });
+  return res.data;
+}

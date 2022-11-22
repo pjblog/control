@@ -1,5 +1,5 @@
 import React from "react";
-import { SettingFilled, SignalFilled, ReadFilled, SkinFilled, RobotFilled, HomeFilled, LayoutFilled, ContainerFilled, FlagFilled, PieChartFilled } from '@ant-design/icons';
+import { SettingFilled, SignalFilled, ReadFilled, SkinFilled, RobotFilled, HomeFilled, LayoutFilled, ContainerFilled, FlagFilled, PieChartFilled, FileTextFilled } from '@ant-design/icons';
 import { TCallbackReturnType } from '../hooks';
 import { Path } from '@codixjs/codix';
 
@@ -16,6 +16,7 @@ export type TMenus = [
   TMenu<'CATEGORY'>,
   TMenu<'ARTICLE'>,
   TMenu<'COMMENT'>,
+  TMenu<'PAGE'>,
   TMenu<'USER'>,
   TMenu<'LINK'>,
   TMenu<'MODULE'>,
@@ -48,6 +49,11 @@ export const menus: TMenus = [
     label: '评论',
     icon: <FlagFilled />,
     code: 'COMMENT'
+  },
+  {
+    label: '单页',
+    icon: <FileTextFilled />,
+    code: 'PAGE'
   },
   {
     label: '用户',

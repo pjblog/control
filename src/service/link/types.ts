@@ -4,6 +4,7 @@ export interface TLinkState {
   link_icon: string,
   link_url: string,
   link_status: boolean,
+  link_topable: boolean,
   gmt_create: Date,
 }
 
@@ -14,6 +15,7 @@ export function createNewLinkState(): TLinkState {
     link_icon: null,
     link_url: null,
     link_status: false,
+    link_topable: false,
     gmt_create: new Date()
   }
 }

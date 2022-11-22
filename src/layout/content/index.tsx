@@ -1,18 +1,30 @@
-import React, { Fragment, useCallback, useContext, useMemo } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import styles from './index.module.less';
 import classnames from 'classnames';
-import { Typography, Breadcrumb, Affix, Button, Tooltip, Space, ButtonProps, message, Popconfirm } from 'antd';
+import { Typography, Breadcrumb, Affix, Button, Tooltip, Space, ButtonProps, message, Popconfirm, Dropdown } from 'antd';
 import { Flex, CopyRight } from '../../components';
 import { useRequestPath, RequestContext, Path } from '@codixjs/codix';
 import { menus } from '../menus';
-import { HomeOutlined, PlusOutlined, ChromeOutlined, LogoutOutlined, ReadOutlined } from '@ant-design/icons';
+import { HomeOutlined, PlusOutlined, ChromeOutlined, LogoutOutlined, ReadOutlined, FileWordOutlined, FilePptOutlined } from '@ant-design/icons';
 import { usePath } from '../../hooks';
 import { useAsyncCallback } from '@codixjs/fetch';
 import { doLogout } from '../../service';
-
+const items = [
+  {
+    key: 'article',
+    label: '新建文章',
+    icon: <FileWordOutlined />
+  },
+  {
+    key: 'page',
+    label: '新建单页',
+    icon: <FilePptOutlined />
+  },
+];
 export function Content(props: React.PropsWithChildren<{ title?: string, wide?: boolean }>) {
   const path = useRequestPath<string>();
   const addNewArticle = usePath('NEW_ARTICLE');
+  const addNewPage = usePath('NEW_PAGE');
   const pathes = useContext(RequestContext).pathes as Record<string, Path>;
   const { loading, execute } = useAsyncCallback(doLogout);
   const current = useMemo(() => {
@@ -33,6 +45,13 @@ export function Content(props: React.PropsWithChildren<{ title?: string, wide?: 
       .then(() => window.location.reload())
       .catch(e => message.error(e.message));
   }, [execute])
+  const addAction = e => {
+    const key = e.key;
+    switch (key) {
+      case 'article': return addNewArticle.redirect();
+      case 'page': return addNewPage.redirect();
+    }
+  }
   if (props.wide) return props.children as JSX.Element;
   return <div className={classnames(styles.container, {
     [styles.wide]: !!props.wide,
@@ -50,9 +69,7 @@ export function Content(props: React.PropsWithChildren<{ title?: string, wide?: 
           }
         </Breadcrumb>
         <Space>
-          <Tooltip title="新建文章">
-            <Abutton onClick={() => addNewArticle.redirect()}><PlusOutlined /></Abutton>
-          </Tooltip>
+          <Dropdown.Button type="primary" menu={{ items, onClick: addAction }}>新建</Dropdown.Button>
           <Tooltip title="官网 / 论坛">
             <Abutton>
               <Typography.Link href="https://www.pjhome.net" target="_blank">

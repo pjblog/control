@@ -4,7 +4,7 @@ import { EditableTable, TGetColumns } from '../../components';
 import { useAsync, useAsyncCallback } from '@codixjs/fetch';
 import { FilterOutlined } from '@ant-design/icons';
 import { Col, message, Row, Typography, Popconfirm, Space, Radio, Input } from 'antd';
-import { getLinks, useBaseRequestConfigs, TLinkState, createNewLinkState, addLink, updateLink, deleteLink, updateLinkStatus } from '../../service';
+import { getLinks, useBaseRequestConfigs, TLinkState, createNewLinkState, addLink, updateLink, deleteLink, updateLinkStatus, updateLinkTopableStatus } from '../../service';
 
 export default function LinkPage() {
   const configs = useBaseRequestConfigs();
@@ -14,6 +14,7 @@ export default function LinkPage() {
   const UPDATE = useAsyncCallback(updateLink);
   const DELETE = useAsyncCallback(deleteLink);
   const STATUS = useAsyncCallback(updateLinkStatus);
+  const TOPABLE = useAsyncCallback(updateLinkTopableStatus);
 
   // 删除
   const delit = useCallback((id: number, remove: Function) => {
@@ -30,6 +31,15 @@ export default function LinkPage() {
     STATUS.execute(id, status)
       .then(execute)
       .then(() => message.success('更新状态成功'))
+      .catch(e => message.error(e.message));
+  }, [execute])
+
+  // 改置顶
+  const changeTopable = useCallback((id: number, status: boolean) => {
+    if (id === 0) return;
+    TOPABLE.execute(id, status)
+      .then(execute)
+      .then(() => message.success(status ? '置顶成功' : '取消置顶成功'))
       .catch(e => message.error(e.message));
   }, [execute])
 
@@ -96,9 +106,17 @@ export default function LinkPage() {
         }
       },
       {
+        title: '置顶',
+        dataIndex: 'link_topable',
+        width: 80,
+        render(s: boolean) {
+          return s ? '已置顶' : '未置顶'
+        }
+      },
+      {
         title: '操作',
         dataIndex: 'id',
-        width: 200,
+        width: 300,
         render(_: number, s: TLinkState) {
           return <Actions record={s}>
             <Popconfirm title="确定删除这条友情链接？" onConfirm={() => delit(_, remove)} okText="确定" cancelText="取消">
@@ -115,6 +133,18 @@ export default function LinkPage() {
               cancelText="取消"
             >
               <Typography.Link disabled={_ === 0}>{s.link_status ? '取消通过' : '通过'}</Typography.Link>
+            </Popconfirm>
+            <Popconfirm 
+              title={
+                s.link_topable 
+                  ? '确定要取消置顶这条友情链接？' 
+                  : '确定要置顶这条友情链接？'
+              } 
+              onConfirm={() => changeTopable(_, !s.link_topable)} 
+              okText="确定" 
+              cancelText="取消"
+            >
+              <Typography.Link disabled={_ === 0}>{s.link_topable ? '取消置顶' : '置顶'}</Typography.Link>
             </Popconfirm>
           </Actions>
         }

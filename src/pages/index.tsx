@@ -73,6 +73,35 @@ export default function createRouters(app: Application<HistoryMode>) {
     sidebar: true,
   }, () => import('./comment')));
 
+  // 单页
+  const PAGE = app.bind('/page', ...withLayout({
+    fallback: <Loading size={36} />,
+    title: '列表',
+    sidebar: true,
+  }, () => import('./page')));
+
+  // 新建文章
+  const NEW_PAGE = app.bind(
+    '/page/post', 
+    withMiddleware(WebSocket, { room: '/markdown' }), 
+    ...withLayout({
+      fallback: <Loading size={36} />,
+      title: '新建',
+      sidebar: false,
+    }, () => import('./page/post'))
+  );
+
+  // 更新文章
+  const MODIFY_PAGE = app.bind<{ id: number }>(
+    '/page/post/:id(\\d+)', 
+    withMiddleware(WebSocket, { room: '/markdown' }), 
+    ...withLayout({
+      fallback: <Loading size={36} />,
+      title: '新建',
+      sidebar: false,
+    }, () => import('./page/post'))
+  );
+
   // 用户
   const USER = app.bind('/user', ...withLayout({
     fallback: <Loading size={36} />,
@@ -138,6 +167,9 @@ export default function createRouters(app: Application<HistoryMode>) {
     CATEGORY,
     ARTICLE,
     COMMENT,
+    PAGE,
+    NEW_PAGE,
+    MODIFY_PAGE,
     ARTICLE_COMMENT,
     NEW_ARTICLE,
     MODIFY_ARTICLE,
