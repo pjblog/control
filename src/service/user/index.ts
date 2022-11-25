@@ -1,5 +1,5 @@
 import { request } from '../request';
-import { TUserInfo, TUserSearchProps, TVisitor } from './types';
+import { TActivedUser, TUserInfo, TUserSearchProps, TVisitor } from './types';
 import type { AxiosRequestConfig } from 'axios';
 
 export * from './types';
@@ -50,5 +50,14 @@ export async function getUserStatistic(configs?: AxiosRequestConfig) {
 
 export async function getVisitors(configs?: AxiosRequestConfig) {
   const res = await request.get<{ list: TVisitor[], total: number }>('/control/statistics', configs);
+  return res.data;
+}
+
+export async function getActivedUsers(size: number, configs?: AxiosRequestConfig) {
+  const res = await request.get<TActivedUser[]>('/control/user/active', Object.assign({}, configs, {
+    params: {
+      size
+    }
+  }));
   return res.data;
 }

@@ -25,3 +25,11 @@ export interface TVisitor {
   ip: string,
   user_agent: string,
 }
+
+export interface TActivedUser {
+  id: number,
+  nickname: string,
+  account: string,
+  avatar: string,
+  count: number,
+}

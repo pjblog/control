@@ -26,3 +26,12 @@ export async function getCommentStatistic(configs?: AxiosRequestConfig) {
   const res = await request.get<{ total: number, replies: number }>('/control/statistic/comment', configs);
   return res.data;
 }
+
+export async function getRecentlyComments(size: number, configs?: AxiosRequestConfig) {
+  const res = await request.get<TCommentState[]>('/comment/recently', Object.assign({}, configs, {
+    params: {
+      size
+    }
+  }));
+  return res.data;
+}

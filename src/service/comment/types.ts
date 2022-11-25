@@ -20,6 +20,7 @@ export interface TCommentState {
   ip: string,
   ctime: string | Date,
   rid: number,
+  content?: string,
   user: {
     id: number,
     nickname: string,

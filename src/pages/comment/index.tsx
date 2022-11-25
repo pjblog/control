@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import classnames from 'classnames';
 import { useRequestParam, useRequestQuery } from '@codixjs/codix';
 import { useAsync, useAsyncCallback } from '@codixjs/fetch';
 import { Col, Row, Avatar, Space, Typography, Spin, Divider, Pagination, Popconfirm, message, Result, Button } from 'antd';
@@ -94,7 +95,7 @@ function ListA(props: React.PropsWithoutRef<TCommentState & { reload: () => void
           </div>
         </div>
       </Flex>
-      <div className={styles.html} dangerouslySetInnerHTML={{ __html: props.html }}></div>
+      <div className={classnames('mdhtml', styles.html)} dangerouslySetInnerHTML={{ __html: props.html }}></div>
     </Space>
   </div>
 }
@@ -115,7 +116,7 @@ function ListB(props: React.PropsWithoutRef<TCommentState & { reload: () => void
           </div>
         </div>
       </Flex>
-      <div className={styles.html} dangerouslySetInnerHTML={{ __html: props.html }}></div>
+      <div className={classnames('mdhtml', styles.html)} dangerouslySetInnerHTML={{ __html: props.html }}></div>
       <div className={styles.reply}>
         {
           !!props.replies && !!props.replies.length && props.replies.map(reply => {

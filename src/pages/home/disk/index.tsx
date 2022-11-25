@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import styles from './index.module.less';
 import { Card, Table } from 'antd';
 import { useAsync } from '@codixjs/fetch';
 import { getDiskInfo, TDiskState, useBaseRequestConfigs } from '../../../service';
@@ -11,37 +12,54 @@ export function Disk() {
       {
         title: '#',
         width: 30,
+        align: 'center',
+        className: styles.small,
         render(_: TDiskState,s: TDiskState, i: number) {
           return i + 1;
         }
       },
       {
         title: '磁盘名',
-        dataIndex: 'Filesystem'
+        dataIndex: 'Filesystem',
+        className: styles.small,
       },
       {
-        title: '挂在路径',
-        dataIndex: 'Mounted'
+        title: '挂载路径',
+        dataIndex: 'Mounted',
+        className: styles.small,
       },
       {
         title: '总量',
-        dataIndex: 'Blocks'
+        dataIndex: 'Blocks',
+        className: styles.small,
       },
       {
         title: '使用量',
-        dataIndex: 'Used'
+        dataIndex: 'Used',
+        className: styles.small,
       },
       {
         title: '可用量',
-        dataIndex: 'Available'
+        dataIndex: 'Available',
+        className: styles.small,
       },
       {
         title: '使用率',
-        dataIndex: 'Capacity'
+        dataIndex: 'Capacity',
+        className: styles.small,
       }
     ]
   }, [])
-  return <Card title="磁盘数据">
-    <Table columns={columns} dataSource={data} pagination={false} rowKey="Filesystem" />
+  return <Card title="磁盘数据" size="small" className={styles.table}>
+    <Table 
+      columns={columns} 
+      dataSource={data.filter(d => d.Filesystem !== 'map')} 
+      pagination={false} 
+      rowKey="Filesystem" 
+      size="middle" 
+      style={{
+        width: '100%',
+      }}
+    />
   </Card>
 }

@@ -16,7 +16,7 @@ export default function SettingPage() {
   const marks = useMemo(() => {
     return state.map(s => {
       return {
-        label: <Flex direction="vertical" align="center" valign="middle">
+        label: <Flex direction="vertical" align="center" valign="middle" gap={8}>
           <div>{s.title}</div>
           <div className={styles.subtitle}>{s.subTitle}</div>
         </Flex>,

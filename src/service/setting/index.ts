@@ -54,3 +54,12 @@ export async function setModuleConfigs<T>(name: string, data: T) {
   const res = await request.put<number>('/control/module/' + name, data);
   return res.data;
 }
+
+export async function getVersions(configs?: AxiosRequestConfig) {
+  type TVersion = {
+    name: string,
+    version: string,
+  }
+  const res = await request.get<Record<'server' | 'client' | 'theme', TVersion>>('/versions', configs)
+  return res.data;
+}

@@ -1,4 +1,5 @@
 import styles from './index.module.less';
+import classnames from 'classnames';
 import { Typography, PageHeader, Divider, Space, Tag } from "antd";
 import { Box, Configs } from "../../../components";
 import { useAsync } from '@codixjs/fetch';
@@ -84,6 +85,6 @@ export default function ThemeDetail() {
       </Box>
     </PageHeader>
     <Divider orientation="left">文档</Divider>
-    <div dangerouslySetInnerHTML={{ __html: info.readme }} className={styles.markdown}></div>
+    <div dangerouslySetInnerHTML={{ __html: info.readme }} className="mdhtml"></div>
   </div>
 }

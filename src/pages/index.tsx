@@ -138,7 +138,7 @@ export default function createRouters(app: Application<HistoryMode>) {
       fallback: <Loading size={36} />,
       title: '详细',
       sidebar: true,
-    }, () => import('./theme/detail'))
+    }, () => import('./module/detail'))
   );
 
   // 插件

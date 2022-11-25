@@ -1,5 +1,5 @@
 import { request } from '../request';
-import type { TArticle, TArticleProps, TArticlePostData } from './types';
+import type { TArticle, TArticleProps, TArticlePostData, THotArticle } from './types';
 import type { AxiosRequestConfig } from 'axios';
 
 export * from './types';
@@ -56,5 +56,14 @@ export async function setCommenable(id: number, status: boolean) {
 
 export async function getArticleStatistic(configs?: AxiosRequestConfig) {
   const res = await request.get<{ total: number, trashes: number, reads: number }>('/control/statistic/article', configs);
+  return res.data;
+}
+
+export async function getHotArticles(i: number = 10, configs?: AxiosRequestConfig) {
+  const res = await request.get<THotArticle[]>('/article/hot', Object.assign({}, configs, {
+    params: {
+      size: i
+    }
+  }))
   return res.data;
 }

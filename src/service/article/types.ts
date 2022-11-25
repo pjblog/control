@@ -68,3 +68,10 @@ export interface TArticleEntity {
   gmt_modified: string | Date
   id: number,
 }
+
+export interface THotArticle {
+  id: number,
+  title: string,
+  summary: string,
+  count: number,
+}

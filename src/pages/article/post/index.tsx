@@ -230,7 +230,7 @@ export default function ArticleBoxPage() {
               ? <div className={classnames(styles.content, styles.source)}>
                   <pre>{html}</pre>
                 </div>
-              : <div className={classnames(styles.content, styles.html)} dangerouslySetInnerHTML={{ __html: html }}></div>
+              : <div className={classnames('mdhtml', styles.content, styles.html)} dangerouslySetInnerHTML={{ __html: html }}></div>
           }
         </Flex>
       </Flex>
