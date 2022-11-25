@@ -60,7 +60,7 @@ export function Content(props: React.PropsWithChildren<{ title?: string, wide?: 
       <Flex className={styles.header} block align="between" valign="middle">
         <Breadcrumb>
           <Breadcrumb.Item>
-            <Typography.Link onClick={() => pathes?.HOME.redirect()}><HomeOutlined /> PJBlog Control</Typography.Link>
+            <Typography.Link onClick={() => pathes?.WELCOME.redirect()}><HomeOutlined /> PJBlog Control</Typography.Link>
           </Breadcrumb.Item>
           {
             currentArray.map(menu => {

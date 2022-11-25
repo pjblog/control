@@ -2,8 +2,8 @@ import React, { useMemo } from 'react';
 import styles from './index.module.less';
 import classnames from 'classnames';
 import { Flex } from '../../components';
-import { Avatar, Typography } from 'antd';
-import { LockFilled, HomeFilled, FileExclamationFilled, FileTextTwoTone, AppstoreTwoTone, SkinTwoTone } from '@ant-design/icons';
+import { Avatar } from 'antd';
+import { ChromeFilled } from '@ant-design/icons';
 import { useAdminInfo } from '../context';
 import { menus } from '../menus';
 import { useRequestPath, redirect } from '@codixjs/codix';
@@ -22,33 +22,15 @@ export function Sidebar() {
     </Flex>
     <Flex span={1} block scroll="y" direction="vertical">
       <ul className={styles.menus}>
+        <li onClick={() => window.location.href = '/'}>
+          <Flex block align="between" valign="middle">
+            <div><ChromeFilled />博客</div>
+            <div className={styles.code}>BLOG</div>
+          </Flex>
+        </li>
         { menus.map(menu => <Channel key={menu.code} {...menu} />) }
       </ul>
     </Flex>
-    {/* <div className={styles.toolbar}>
-      <Flex className={styles.tools} block>
-        <Flex span={1} className={styles.tool} align="center" direction="vertical" gap={[0, 4]}>
-          <HomeFilled className={styles.icon} />
-          <span>官网</span>
-        </Flex>
-        <Flex span={1} className={styles.tool} align="center" direction="vertical" gap={[0, 4]}>
-          <FileExclamationFilled className={styles.icon} />
-          <span>文档</span>
-        </Flex>
-        <Flex span={1} className={styles.tool} align="center" direction="vertical" gap={[0, 4]}>
-          <LockFilled className={styles.icon} />
-          <span>退出</span>
-        </Flex>
-      </Flex>
-    </div> */}
-    {/* <Flex align="center" valign="middle">
-      Copyright@PJHome.net v1.0.0 <br />
-    </Flex> */}
-    {/* <ul className={styles.extraList}>
-      <li><HomeFilled />官网</li>
-      <li><FileExclamationFilled />开发文档</li>
-      <li><LockFilled />退出登录</li>
-    </ul> */}
   </Flex>
 }
 

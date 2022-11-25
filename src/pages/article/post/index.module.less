@@ -1,8 +1,9 @@
 @editor-space: 24px;
+@editor-border-bolor: rgb(240, 240, 240);
 .editor{
   .editorTitle{
     padding: 0 @editor-space 0 (@editor-space/2);
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: 1px solid @editor-border-bolor;
     .label{
       color: #a0aabf;
       padding-left: 11px;
@@ -24,11 +25,11 @@
       top: 0;
       left: 50%;
       content: '';
-      background-color: #e8e8e8;
+      background-color: @editor-border-bolor;
     }
     .tip{
       color: #a0aabf;
-      border-bottom: 1px solid #e8e8e8;
+      border-bottom: 1px solid @editor-border-bolor;
       width: 100%;
       height: 40px;
       display: flex;
@@ -57,12 +58,12 @@
         padding: 1em 16px 2px;
       }
       table {
-        border: 1px solid #e8e8e8;
+        border: 1px solid @editor-border-bolor;
         margin-bottom: 1em;
         th,td{
           padding: 12px 16px;
-          border-right: 1px solid #e8e8e8;
-          border-bottom: 1px solid #e8e8e8;
+          border-right: 1px solid @editor-border-bolor;
+          border-bottom: 1px solid @editor-border-bolor;
           font-size: 13px;
         }
       }
@@ -90,7 +91,7 @@
   .editorTools{
     padding: (@editor-space/4) @editor-space;
     font-size: 12px;
-    border-top: 1px solid #e8e8e8;
+    border-top: 1px solid @editor-border-bolor;
     color: #a0aabf;
   }
 }

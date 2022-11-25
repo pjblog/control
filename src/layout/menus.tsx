@@ -11,7 +11,7 @@ export type TMenu<T extends keyof TCallbackReturnType> = {
 }
 
 export type TMenus = [
-  TMenu<'HOME'>,
+  TMenu<'WELCOME'>,
   TMenu<'SETTING'>,
   TMenu<'CATEGORY'>,
   TMenu<'ARTICLE'>,
@@ -26,9 +26,9 @@ export type TMenus = [
 
 export const menus: TMenus = [
   {
-    label: '首页',
+    label: '欢迎',
     icon: <HomeFilled />,
-    code: 'HOME',
+    code: 'WELCOME',
   },
   {
     label: '设置',

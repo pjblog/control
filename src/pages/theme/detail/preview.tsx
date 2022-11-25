@@ -1,20 +1,19 @@
+import styles from './index.module.less';
 import 'react-photo-view/dist/react-photo-view.css';
 import React from 'react';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
-import { Typography } from 'antd';
+import { Space, Typography } from 'antd';
 
 export function Preview(props: React.PropsWithoutRef<{ images: string[] }>) {
   return <PhotoProvider>
+    <Space>
     {
-      props.images.map((image, index) => {
+      props.images.map(image => {
         return <PhotoView src={image} key={image}>
-          {
-            index === 0 
-              ? <Typography.Link>预览</Typography.Link>
-              : null
-          }
+          <img src={image} alt="" className={styles.preview} />
         </PhotoView>
       })
     }
+    </Space>
   </PhotoProvider>
 }

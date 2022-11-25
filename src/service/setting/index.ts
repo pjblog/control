@@ -30,13 +30,8 @@ export async function setTheme(theme: string) {
   return res.data;
 }
 
-export async function uninstallTheme(name: string) {
-  const res = await request.delete('/control/theme/' + name);
-  return res.data;
-}
-
-export async function uninstallPlugin(name: string) {
-  const res = await request.delete('/control/plugin/' + name);
+export async function uninstall(name: string) {
+  const res = await request.delete('/control/module/' + name);
   return res.data;
 }
 
@@ -50,12 +45,12 @@ export async function getVisitorStatistic(configs?: AxiosRequestConfig) {
   return res.data;
 }
 
-export async function getPluginDetail(plugin: string, configs?: AxiosRequestConfig) {
-  const res = await request.get<TPluginDetailState>('/control/plugin/' + plugin, configs);
+export async function getModuleDetail(name: string, configs?: AxiosRequestConfig) {
+  const res = await request.get<TPluginDetailState>('/control/module/' + name, configs);
   return res.data;
 }
 
-export async function setPluginConfigs<T>(plugin: string, data: T) {
-  const res = await request.put<number>('/control/plugin/' + plugin, data);
+export async function setModuleConfigs<T>(name: string, data: T) {
+  const res = await request.put<number>('/control/module/' + name, data);
   return res.data;
 }

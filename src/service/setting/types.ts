@@ -1,5 +1,5 @@
 import { TWidgetConfigProp } from "../../components/some/types";
-import { TBlogPackageState } from "../../pages/types";
+import { TBlogPackageState, TMeta } from "../../pages/types";
 
 export type InputType = 'button' 
   | 'checkbox' 
@@ -139,9 +139,9 @@ export interface TDiskState {
   Mounted: string,
 }
 
-export interface TPluginDetailState<T = any> extends TBlogPackageState {
+export interface TPluginDetailState<T = any> extends TMeta {
   configs: {
-    rule: TWidgetConfigProp<T>[],
+    rules: TWidgetConfigProp<T>[],
     value: T,
   }
 }

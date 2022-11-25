@@ -18,3 +18,17 @@ export type TBlogPackageState = TBlogPackageMarker['pjblog'] & {
   description: string,
   README: string,
 }
+
+export interface TMeta {
+  type: 'plugin' | 'theme',
+  name: string,
+  version: string,
+  descriptions: string,
+  repository: string,
+  homepage: string,
+  dictionary: string,
+  readme: string,
+  extends?: Record<string, string>,
+  icon: string,
+  previews?: string[],
+}

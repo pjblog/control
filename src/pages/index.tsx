@@ -12,9 +12,9 @@ export default function createRouters(app: Application<HistoryMode>) {
   app.use(ClientProvider, { client });
   
   // 主页
-  const HOME = app.bind('/', ...withLayout({ 
+  const WELCOME = app.bind('/', ...withLayout({ 
     fallback: <Loading size={36} />,
-    title: '欢迎',
+    title: '大盘',
     sidebar: true,
   }, () => import('./home')));
 
@@ -132,6 +132,15 @@ export default function createRouters(app: Application<HistoryMode>) {
     }, () => import('./theme'))
   );
 
+  // 插件详情
+  const MODULE_DETAIL = app.bind<{ name: string }>('/module/:name', 
+    ...withLayout({
+      fallback: <Loading size={36} />,
+      title: '详细',
+      sidebar: true,
+    }, () => import('./theme/detail'))
+  );
+
   // 插件
   const PLUGIN = app.bind('/plugin', 
     withMiddleware(WebSocket, { room: '/modularing' }), 
@@ -140,15 +149,6 @@ export default function createRouters(app: Application<HistoryMode>) {
       title: '列表',
       sidebar: true,
     }, () => import('./plugin'))
-  );
-
-  // 插件详情
-  const PLUGIN_DETAIL = app.bind<{ plugin: string }>('/plugin/:plugin', 
-    ...withLayout({
-      fallback: <Loading size={36} />,
-      title: '详细',
-      sidebar: true,
-    }, () => import('./plugin/detail'))
   );
   
   // 模块
@@ -162,7 +162,7 @@ export default function createRouters(app: Application<HistoryMode>) {
   );
 
   return {
-    HOME,
+    WELCOME,
     SETTING,
     CATEGORY,
     ARTICLE,
@@ -177,8 +177,8 @@ export default function createRouters(app: Application<HistoryMode>) {
     VISITOR,
     LINK,
     THEME,
+    MODULE_DETAIL,
     PLUGIN,
-    PLUGIN_DETAIL,
     MODULE,
     client,
   }

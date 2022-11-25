@@ -1,85 +1,48 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useSocket } from '../../components';
 import styles from './index.module.less';
-import { TBlogPackageState } from '../types';
-import { Checkbox, Typography, Table, Tag, Space, Avatar } from 'antd';
-import { ColumnsType } from 'antd/lib/table';
+import { PropsWithoutRef, useEffect, useState } from 'react';
+import { Flex, useSocket } from '../../components';
+import { TMeta } from '../types';
+import { Checkbox, Typography, Card, Tag } from 'antd';
 import { useAsync } from '@codixjs/fetch';
 import { getTheme, useBaseRequestConfigs } from '../../service';
-import { Preview } from './preview';
-import { Active } from './active';
-import { UnInstall } from './uninstall';
-import { CheckUpdate } from '../setting/update';
+import { usePath } from '../../hooks';
+
+const { Meta } = Card;
 
 export default function ThemePage() {
   const socket = useSocket();
   const configs = useBaseRequestConfigs();
-  const { data: theme, setData } = useAsync('theme', () => getTheme(configs));
-  const [themes, setThemes] = useState<TBlogPackageState[]>([]);
-
-  const columns = useMemo<ColumnsType<TBlogPackageState>>(() => {
-    return [
-      {
-        title: '#',
-        dataIndex: 'name',
-        width: 30,
-        render(_theme: string) {
-          return _theme === theme ? <Checkbox checked={true} /> : null;
-        }
-      },
-      {
-        title: '封面',
-        dataIndex: 'icon',
-        width: 30,
-        align: 'center',
-        render(icon: string) {
-          return <Avatar src={icon} size={36} shape="square" />
-        }
-      },
-      {
-        title: '名称',
-        dataIndex: 'name',
-        width: 300,
-        className: styles.name
-      },
-      {
-        title: '版本',
-        dataIndex: 'version',
-        width: 100,
-        render(version: string) {
-          return <Tag>{version}</Tag>
-        }
-      },
-      {
-        title: '描述',
-        dataIndex: 'description',
-        className: styles.desc
-      },
-      {
-        title: '操作',
-        dataIndex: 'name',
-        align: 'right',
-        render(name: string, chunk: TBlogPackageState) {
-          return <Space>
-            {!!chunk.previews?.length && <Preview images={chunk.previews} />}
-            {theme !== name && <Active name={name} reload={() => setData(name)} />}
-            <CheckUpdate name={name} />
-            {theme !== name && <UnInstall name={name} />}
-          </Space>
-        }
-      }
-    ]
-  }, [theme, setData])
+  const { data } = useAsync('theme', () => getTheme(configs));
+  const [themes, setThemes] = useState<TMeta[]>([]);
 
   useEffect(() => {
     if (socket) {
-      const handler = (...themes: TBlogPackageState[]) => setThemes(themes);
-      socket.on('themes', handler);
-      socket.emit('themes');
+      const handler = (...themes: TMeta[]) => setThemes(themes.filter(theme => theme.type === 'theme'));
+      socket.on('nodes', handler);
+      socket.emit('nodes');
       return () => {
-        socket.off('themes', handler);
+        socket.off('nodes', handler);
       }
     }
   }, [socket]);
-  return <Table rowKey="name" pagination={false} dataSource={themes} columns={columns} />
+
+  return <Flex block wrap="wrap" gap={[24, 24]}>
+    {themes.map(theme => <Item {...theme} current={data} key={theme.name} />)}
+  </Flex>
+}
+
+function Item(props: PropsWithoutRef<TMeta & { current: string }>) {
+  const theme = usePath('MODULE_DETAIL');
+  return <Card
+    className={styles.card}
+    cover={<img alt={props.name} src={props.icon} />}
+    onClick={() => theme.redirect({ name: props.name })}
+  >
+    <Meta 
+      className={styles.meta}
+      title={<Typography.Text title={props.name}>{props.name.toUpperCase()}</Typography.Text>} 
+      description={<Checkbox checked={props.current === props.name} className={styles.checked} />}
+    />
+    <Flex block align="center" valign="middle" className={styles.version}><Tag>@{props.version}</Tag></Flex>
+  </Card>
 }
