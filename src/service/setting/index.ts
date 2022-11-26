@@ -63,3 +63,8 @@ export async function getVersions(configs?: AxiosRequestConfig) {
   const res = await request.get<Record<'server' | 'client' | 'theme', TVersion>>('/versions', configs)
   return res.data;
 }
+
+export async function getStatisticByDay(day: number = 7, configs?: AxiosRequestConfig) {
+  const res = await request.get<{ date: string, total: number }[]>('/control/statistic/' + day, configs)
+  return res.data;
+}

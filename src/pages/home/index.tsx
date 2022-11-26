@@ -13,6 +13,7 @@ import { Versions } from './versions';
 import { HotArticles } from './hot-articles';
 import { CommentRecently } from './comment-recently';
 import { ActivedUsers } from './user-active';
+import { DaysStatistic } from './days-statistics';
 import { usePath } from '../../hooks';
 
 export default function HomePage() {
@@ -72,7 +73,9 @@ export default function HomePage() {
     </Col>
     <Col span={8}>
       <Card title="7日内访客趋势" size="small">
-        暂无数据，敬请期待！
+        <Suspense fallback={<Loading />}>
+          <DaysStatistic day={7} />
+        </Suspense>
       </Card>
     </Col>
     <Col span={16}>

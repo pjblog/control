@@ -1,6 +1,6 @@
 {
   "name": "@pjblog/control",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "pjblog control manager",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
+    "@ant-design/plots": "^1.2.2",
     "@codemirror/lang-markdown": "^6.0.4",
     "@codemirror/language-data": "^6.1.0",
     "@codixjs/codix": "^1.0.0",
