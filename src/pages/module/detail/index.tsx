@@ -58,7 +58,7 @@ export default function ThemeDetail() {
         <List title="描述" size={size}>{info.descriptions}</List>
         <List title="所在文件夹" size={size}>{info.dictionary}</List>
         <List title="仓库" size={size}>{info.repository ? <Typography.Link href={info.repository} target="_blank">{info.repository}</Typography.Link> : '-'}</List>
-        <List title="主页" size={size}>{info.homepage ? <Typography.Link href={info.homepage} target="_blank"></Typography.Link> : '-'}</List>
+        <List title="主页" size={size}>{info.homepage ? <Typography.Link href={info.homepage} target="_blank">{info.homepage}</Typography.Link> : '-'}</List>
         <List title="依赖插件" size={size}>
           {
             !!deps.length 
