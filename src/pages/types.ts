@@ -31,4 +31,8 @@ export interface TMeta {
   extends?: Record<string, string>,
   icon: string,
   previews?: string[],
+  advance?: {
+    index: string,
+    public: string,
+  }
 }

@@ -1,6 +1,5 @@
 import styles from './index.module.less';
-import classnames from 'classnames';
-import { Typography, PageHeader, Divider, Space, Tag } from "antd";
+import { Typography, PageHeader, Divider, Space, Tag, Button } from "antd";
 import { Box, Configs } from "../../../components";
 import { useAsync } from '@codixjs/fetch';
 import { getModuleDetail, getTheme, useBaseRequestConfigs } from '../../../service';
@@ -9,6 +8,7 @@ import { useMemo } from 'react';
 import { Preview } from './preview';
 import { Active } from './active';
 import { UnInstall } from './uninstall';
+import { usePath } from '../../../hooks';
 
 const { List } = Box;
 const size = 120;
@@ -18,6 +18,7 @@ export default function ThemeDetail() {
   const theme = useRequestParam<string>('name');
   const { data: current, setData } = useAsync('theme', () => getTheme(configs));
   const { data: info } = useAsync('theme:' + theme, () => getModuleDetail(theme, configs), [theme]);
+  const ADVANCE = usePath('MODULE_ADVANCE');
 
   const deps = useMemo(() => {
     const pools: { label: string, value: string }[] = [];
@@ -40,6 +41,7 @@ export default function ThemeDetail() {
   }, [info.type, current, info.name]);
 
   const items: React.ReactNode[] = [
+    info.type === 'plugin' && !!info.advance ? <Button key="advance" onClick={() => ADVANCE.redirect({ name: info.name })}>高级</Button> : null,
     <Configs key="configs" disabled={!isSelf} rules={info.configs.rules} value={info.configs.value} name={info.name} />,
     info.type === 'theme' ? <Active key="active" name={info.name} disabled={isSelf} reload={() => setData(info.name)} /> : null,
     <UnInstall key="uninstall" name={info.name} disabled={isSelf} />,

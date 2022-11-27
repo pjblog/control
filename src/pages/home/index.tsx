@@ -3,7 +3,7 @@ import styles from './index.module.less';
 import { Card, Col, Row } from 'antd';
 import { Disk } from './disk';
 import { Flex, Loading } from '../../components';
-import { PlusOutlined, CommentOutlined, WindowsOutlined } from '@ant-design/icons';
+import { PlusOutlined, CommentOutlined, WindowsOutlined, MoreOutlined } from '@ant-design/icons';
 
 import { ArticleStatistic } from './article-statistic';
 import { UserStatistic } from './user-statistic';
@@ -18,8 +18,11 @@ import { usePath } from '../../hooks';
 
 export default function HomePage() {
   const ARTICLE = usePath('NEW_ARTICLE');
+  const ARTICLES = usePath('ARTICLE');
   const COMMENT = usePath('COMMENT');
   const MODULE = usePath('MODULE');
+  const VISITOR = usePath('VISITOR');
+  const USER = usePath('USER');
   return <Row gutter={[24, 24]}>
     <Col span={6}>
       <Suspense fallback={<Loading />}>
@@ -72,7 +75,7 @@ export default function HomePage() {
       </Suspense>
     </Col>
     <Col span={8}>
-      <Card title="7日内访客趋势" size="small">
+      <Card title="7日内访客趋势" size="small" extra={<MoreOutlined onClick={() => VISITOR.redirect()} />}>
         <Suspense fallback={<Loading />}>
           <DaysStatistic day={7} />
         </Suspense>
@@ -91,7 +94,7 @@ export default function HomePage() {
     </Col>
 
     <Col span={6}>
-      <Card title="最高访问量文章" size="small">
+      <Card title="最高访问量文章" size="small" extra={<MoreOutlined onClick={() => ARTICLES.redirect()} />}>
         <Suspense fallback={<Loading />}>
           <HotArticles size={5} />
         </Suspense>
@@ -99,7 +102,7 @@ export default function HomePage() {
     </Col>
 
     <Col span={6}>
-      <Card title="最新评论" size="small">
+      <Card title="最新评论" size="small" extra={<MoreOutlined onClick={() => COMMENT.redirect()} />}>
         <Suspense fallback={<Loading />}>
           <CommentRecently size={10} />
         </Suspense>
@@ -107,7 +110,7 @@ export default function HomePage() {
     </Col>
 
     <Col span={6}>
-      <Card title="活跃用户" size="small">
+      <Card title="活跃用户" size="small" extra={<MoreOutlined onClick={() => USER.redirect()} />}>
         <Suspense fallback={<Loading />}>
           <ActivedUsers size={20} />
         </Suspense>

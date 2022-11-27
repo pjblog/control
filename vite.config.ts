@@ -56,11 +56,15 @@ export default defineConfig(async () => {
       proxy: {
         "/api": {
           changeOrigin: true,
-          target: "http://127.0.0.1:8000",
+          target: "http://127.0.0.1:8866",
+        },
+        "/__plugin__": {
+          changeOrigin: true,
+          target: "http://127.0.0.1:8866",
         },
         "/socket.io": {
           changeOrigin: true,
-          target: "http://127.0.0.1:8000",
+          target: "http://127.0.0.1:8866",
         }
       }
     }

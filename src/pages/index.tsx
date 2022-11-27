@@ -141,6 +141,15 @@ export default function createRouters(app: Application<HistoryMode>) {
     }, () => import('./module/detail'))
   );
 
+  // 插件高级
+  const MODULE_ADVANCE = app.bind<{ name: string }>('/module/:name/advance', 
+    ...withLayout({
+      fallback: <Loading size={36} />,
+      title: '高级',
+      sidebar: true,
+    }, () => import('./module/advance'))
+  );
+
   // 插件
   const PLUGIN = app.bind('/plugin', 
     withMiddleware(WebSocket, { room: '/modularing' }), 
@@ -170,6 +179,7 @@ export default function createRouters(app: Application<HistoryMode>) {
     PAGE,
     NEW_PAGE,
     MODIFY_PAGE,
+    MODULE_ADVANCE,
     ARTICLE_COMMENT,
     NEW_ARTICLE,
     MODIFY_ARTICLE,
