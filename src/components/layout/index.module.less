@@ -1,0 +1,87 @@
+@sidebar-width: 60px;
+@navbar-height: 48px;
+@sidebar-hover-color: #4096ff;
+.layout {
+  min-height: 100%;
+  width: 100%;
+  .sidebar{
+    height: 100%;
+    overflow: hidden;
+    width: @sidebar-width;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #edf2f6;
+    .user {
+      padding: 12px 0;
+    }
+    ul{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      // margin-top: 12px;
+      width: 100%;
+      li{
+        padding: 18px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        cursor: pointer;
+        background-color: transparent;
+        color: #555;
+        transition: all .3s ease-in-out;
+        position: relative;
+        &.active, &:hover{
+          background-color: rgba(0,0,0,.05);
+          color: #000;
+        }
+        &:hover{
+          background-color: rgba(0,0,0,.03);
+        }
+        &.active{
+          color: @sidebar-hover-color;
+          &::after{
+            position: absolute;
+            content: '';
+            top:0;
+            right: 0;
+            width: 2px;
+            height: 100%;
+            background-color: @sidebar-hover-color;
+          }
+        }
+      }
+    }
+  }
+  .main{
+    margin-left: @sidebar-width;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100%;
+    box-sizing: border-box;
+    .navbar{
+      width: calc(100% - @sidebar-width);
+      position: fixed;
+      top: 0;
+      left: @sidebar-width;
+      height: @navbar-height;
+      border-bottom: 1px solid #f5f5f5;
+      background-color: #fff;
+      overflow: hidden;
+      align-items: center;
+      display: flex;
+      padding: 0 24px;
+      box-sizing: border-box;
+      background-color: #fff;
+      z-index: 99;
+    }
+    .body{
+      width: 100%;
+      overflow-x: hidden;
+      padding-top: @navbar-height;
+      min-height: 100%;
+      box-sizing: border-box;
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 const pkg = require('./package.json');
 const dependencies = pkg.dependencies;
 const keys = Object.keys(dependencies);
@@ -19,6 +20,9 @@ export default defineConfig(async () => {
         '.less', 
         '.css'
       ],
+      alias: {
+        "@pjblog/control-hooks": resolve(__dirname, 'src/components'),
+      }
     },
     css: {
       devSourcemap: false,
@@ -54,17 +58,13 @@ export default defineConfig(async () => {
     ],
     server: {
       proxy: {
-        "/api": {
+        "/-": {
           changeOrigin: true,
-          target: "http://127.0.0.1:8866",
-        },
-        "/__plugin__": {
-          changeOrigin: true,
-          target: "http://127.0.0.1:8866",
+          target: "http://127.0.0.1:8000",
         },
         "/socket.io": {
           changeOrigin: true,
-          target: "http://127.0.0.1:8866",
+          target: "http://127.0.0.1:8000",
         }
       }
     }

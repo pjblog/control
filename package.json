@@ -16,32 +16,17 @@
     "pub": "npm run build && git add . && git commit -am 'update' && git push && npm publish"
   },
   "dependencies": {
-    "@ant-design/icons": "^4.7.0",
-    "@ant-design/plots": "^1.2.2",
-    "@codemirror/lang-markdown": "^6.0.4",
-    "@codemirror/language-data": "^6.1.0",
+    "@ant-design/icons": "^4.8.0",
     "@codixjs/codix": "^1.0.0",
     "@codixjs/fetch": "^1.0.0",
     "@codixjs/server": "^1.0.0",
-    "@uiw/react-codemirror": "^4.12.4",
-    "antd": "^4.23.6",
-    "axios": "^1.1.3",
+    "@types/crypto-js": "^4.1.1",
+    "antd": "^5.0.3",
+    "axios": "^1.2.0",
     "classnames": "^2.3.2",
-    "dayjs": "^1.11.6",
-    "express": "^4.18.2",
-    "http-proxy-middleware": "^2.0.6",
-    "immutability-helper": "^3.1.1",
-    "qiankun": "^2.8.4",
+    "crypto-js": "^4.1.1",
     "react": "^18.0.0",
-    "react-dnd": "^16.0.1",
-    "react-dnd-html5-backend": "^16.0.1",
-    "react-dom": "^18.0.0",
-    "react-photo-view": "^1.2.2",
-    "serve-static": "^1.15.0",
-    "socket.io-client": "^4.5.3",
-    "xterm": "^5.0.0",
-    "xterm-addon-canvas": "^0.2.0",
-    "xterm-addon-fit": "^0.6.0"
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",
@@ -57,9 +42,9 @@
   },
   "config": {
     "entries": {
-      "spa": "./src/entries/spa.tsx",
+      "spa": "./src/entry.tsx",
       "client": "./src/entries/client.tsx",
-      "server": "./src/entries/server.tsx"
+      "server": "./src/render.ts"
     },
     "skips": [
       "/control/@react-refresh",
