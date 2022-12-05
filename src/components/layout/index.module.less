@@ -41,11 +41,11 @@
         }
         &.active{
           color: @sidebar-hover-color;
-          &::after{
+          &::before{
             position: absolute;
             content: '';
             top:0;
-            right: 0;
+            left: 0;
             width: 2px;
             height: 100%;
             background-color: @sidebar-hover-color;
@@ -82,6 +82,9 @@
       padding-top: @navbar-height;
       min-height: 100%;
       box-sizing: border-box;
+      .content{
+        height: calc(100% - @navbar-height);
+      }
     }
   }
 }

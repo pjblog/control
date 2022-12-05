@@ -2,9 +2,9 @@ import styles from './index.module.less';
 import { Flex, useGetAsync, Fields, request } from '@pjblog/control-hooks';
 import { Button, message, Tabs } from 'antd';
 import { TBlogConfigsProps, TConfigsGroup } from './types';
-import { useCallback, useMemo, useState } from 'react';
+import { CSSProperties, useCallback, useMemo, useState } from 'react';
 import { useAsyncCallback } from '@codixjs/fetch';
-const css = {
+const css: CSSProperties = {
   width: 217,
   marginTop: 8
 }

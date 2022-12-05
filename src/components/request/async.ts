@@ -19,7 +19,7 @@ export function useGetAsync<T = any>(
   }, [options.id, options.url, options.querys, options.headers]);
   return useAsync(code, async () => {
     const res = await request.get<T>(options.url, Object.assign({}, configs, {
-      param: options.querys,
+      params: options.querys,
       headers: options.headers,
     }))
     return res.data;
@@ -42,7 +42,7 @@ export function usePostAsync<T = any>(
   }, [options.id, options.url, options.querys, options.headers, options.data]);
   return useAsync(code, async () => {
     const res = await request.post<T>(options.url, options.data, Object.assign({}, configs, {
-      param: options.querys,
+      params: options.querys,
       headers: options.headers,
     }))
     return res.data;
@@ -65,7 +65,7 @@ export function usePutAsync<T = any>(
   }, [options.id, options.url, options.querys, options.headers, options.data]);
   return useAsync(code, async () => {
     const res = await request.put<T>(options.url, options.data, Object.assign({}, configs, {
-      param: options.querys,
+      params: options.querys,
       headers: options.headers,
     }))
     return res.data;
@@ -87,7 +87,7 @@ export function useDelAsync<T = any>(
   }, [options.id, options.url, options.querys, options.headers]);
   return useAsync(code, async () => {
     const res = await request.delete<T>(options.url, Object.assign({}, configs, {
-      param: options.querys,
+      params: options.querys,
       headers: options.headers,
     }))
     return res.data;
