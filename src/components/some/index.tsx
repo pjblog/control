@@ -14,6 +14,8 @@ import { SelectList } from './select';
 import { SwitchBox } from './switch';
 import { Tags } from './tags';
 
+export * from './tags';
+
 type TKey<V> = TWidgetConfigProp<V>['type']
 const types = {
   text: Text,

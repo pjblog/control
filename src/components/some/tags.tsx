@@ -37,7 +37,7 @@ export function Tags(props: React.PropsWithoutRef<{
     }
   }, [mode])
 
-  return <Space direction={props.options?.direction}>
+  return <Space direction={props.options?.direction} size={props.options?.direction === 'horizontal' ? 0 : 4}>
     {
       (props.value || []).map(val => {
         return <Tag key={val} closable onClose={() => del(val)}>{val}</Tag>
@@ -49,7 +49,7 @@ export function Tags(props: React.PropsWithoutRef<{
       onChange={e => setValue(e.target.value)} 
       type="text" 
       size="small" 
-      style={{ width: 120 }} 
+      style={{ width: 100 }} 
       ref={el} 
       placeholder={props.options.placeholder}
       onPressEnter={e => submit(e.currentTarget.value)}

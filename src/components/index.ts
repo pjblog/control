@@ -7,3 +7,4 @@ export * from './some';
 export * from './fields';
 export * from './table';
 export * from './loading';
+export * from './websocket';

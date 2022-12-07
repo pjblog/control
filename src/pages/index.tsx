@@ -1,6 +1,6 @@
-import { Application, HistoryMode, withImport } from '@codixjs/codix';
+import { Application, HistoryMode, withImport, withMiddleware } from '@codixjs/codix';
 import { Client, ClientProvider } from '@codixjs/fetch';
-import { Provider } from '@pjblog/control-hooks';
+import { Provider, WebSocket } from '@pjblog/control-hooks';
 
 export default function createRouters(app: Application<HistoryMode>) {
   const client = new Client();
@@ -16,11 +16,22 @@ export default function createRouters(app: Application<HistoryMode>) {
   const CONFIGS = app.bind('/configs', ...withImport(() => import('./configs')));
   const CATEGORIES = app.bind('/categories', ...withImport(() => import('./categories')));
   const ARTICLES = app.bind('/articles', ...withImport(() => import('./articles')));
-  const POST_ARTICLE = app.bind('/articles/post', ...withImport(() => import('./articles/post')));
   const USERS = app.bind('/users', ...withImport(() => import('./users')));
   const THEMES = app.bind('/themes', ...withImport(() => import('./themes')));
   const PLUGINS = app.bind('/plugins', ...withImport(() => import('./plugins')));
   const WIDGETS = app.bind('/widgets', ...withImport(() => import('./widgets')));
+
+  const POST_ARTICLE = app.bind(
+    '/articles/post', 
+    withMiddleware(WebSocket, { room: '/article' }), 
+    ...withImport(() => import('./articles/post'))
+  );
+
+  const EDIT_ARTICLE = app.bind<{ id: number }>(
+    '/articles/post/:id(\\d+)', 
+    withMiddleware(WebSocket, { room: '/article' }), 
+    ...withImport(() => import('./articles/post')),
+  );
 
   const routes = {
     HOME,
@@ -28,6 +39,7 @@ export default function createRouters(app: Application<HistoryMode>) {
     CATEGORIES,
     ARTICLES,
     POST_ARTICLE,
+    EDIT_ARTICLE,
     USERS,
     THEMES,
     PLUGINS,

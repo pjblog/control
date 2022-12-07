@@ -1,10 +1,12 @@
 import styles from './index.module.less';
 import classnames from 'classnames';
-import { Flex, useGetAsync, Loading } from "@pjblog/control-hooks";
+import { Flex, useGetAsync, Loading, request } from "@pjblog/control-hooks";
 import { IArticle, ICategoryUnOutabled } from './types';
-import { Fragment, MutableRefObject, PropsWithoutRef, Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { Space, Typography, Avatar, Divider, Tag, Spin, Pagination, Input, Empty, FloatButton, Tooltip, Anchor } from 'antd';
+import { Fragment, PropsWithoutRef, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import { Space, Typography, Avatar, Tag, Pagination, Input, Empty, FloatButton, Tooltip, Anchor, message, Popconfirm } from 'antd';
 import { EyeFilled, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { usePath } from '../../hooks';
+import { useAsyncCallback } from '@codixjs/fetch';
 
 interface IState {
   id: string,
@@ -20,8 +22,8 @@ export default function Page() {
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
-  const ref = useRef();
-  const { data: { total, dataSource } } = useGetAsync<{ total: number, dataSource: IArticle[] }>({
+  const { data: { total, dataSource }, execute } = useGetAsync<{ total: number, dataSource: IArticle[] }>({
+    id: 'articles',
     url: '/-/article',
     querys: { category, keyword, page, size }
   }, [category, keyword, page, size])
@@ -69,7 +71,7 @@ export default function Page() {
         </Flex>
       </div>
       <Flex className={styles.preview} block full scroll="y" id="scroller">
-        {!!preview && <Preview {...preview} />}
+        {!!preview && <Preview {...preview} reload={execute} />}
       </Flex>
     </Flex>
   </Flex>
@@ -116,12 +118,31 @@ function Article(props: PropsWithoutRef<{ actived: boolean, article: IArticle, s
   </div>
 }
 
-function Preview(props: PropsWithoutRef<IArticle>) {
+function Preview(props: PropsWithoutRef<IArticle & { reload: () => void }>) {
+  const EditPather = usePath('EDIT_ARTICLE');
   const dataSource = useMemo(() => formatHeadings(props.headings), [props.headings]);
+  const { execute, loading } = useAsyncCallback(async () => {
+    const res = await request.delete('/-/article/' + props.id);
+    return res.data;
+  })
+  const submit = useCallback(() => {
+    if (loading) return;
+    execute()
+      .then(props.reload)
+      .then(() => message.success('删除成功'))
+      .catch(e => message.error(e.message))
+  }, [execute, props.reload, loading]);
   return <Flex className={styles.wrap} gap={24}>
     <FloatButton.Group shape="circle" style={{ right: 24 }}>
-      <Tooltip title="编辑" placement="left"><FloatButton icon={<EditOutlined />} /></Tooltip>
-      <Tooltip title="删除" placement="left"><FloatButton icon={<DeleteOutlined />} /></Tooltip>
+      <Tooltip title="编辑" placement="left"><FloatButton icon={<EditOutlined />} onClick={() => EditPather.redirect({ id: props.id })} /></Tooltip>
+      <Tooltip title="删除" placement="left">
+        <Popconfirm
+          title="确定删除此文章？"
+          onConfirm={submit}
+          okText="删除"
+          cancelText="取消"
+        ><FloatButton icon={<DeleteOutlined />} /></Popconfirm>
+      </Tooltip>
     </FloatButton.Group>
     <div className="markdown">
       <Typography.Title level={1}>{props.title}</Typography.Title>
@@ -133,7 +154,7 @@ function Preview(props: PropsWithoutRef<IArticle>) {
   </Flex>
 }
 
-function formatHeadings(dataSource: IArticle['headings']) {
+export function formatHeadings(dataSource: IArticle['headings']) {
   if (!dataSource?.length) return [];
   let level: number = dataSource[0].level;
   const pools: IState[] = [];
@@ -185,7 +206,7 @@ function getByIndex(pools: IState[], indexs: number[]) {
   return res;
 }
 
-function Links(props: PropsWithoutRef<{ dataSource: IState[] }>) {
+export function Links(props: PropsWithoutRef<{ dataSource: IState[] }>) {
   if (!props.dataSource.length) return;
   return <Fragment>
     {
