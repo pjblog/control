@@ -81,7 +81,10 @@ function Categories(props: PropsWithoutRef<{
   value: number,
   setValue: (val: number) => void,
 }>) {
-  const { data } = useGetAsync<ICategoryUnOutabled[]>({ url: '/-/category/unoutabled' });
+  const { data } = useGetAsync<ICategoryUnOutabled[]>({ 
+    id: 'unOutabledCategories',
+    url: '/-/category/unoutabled' 
+  });
   const total = useMemo(() => data.reduce((prev, next) => prev + Number(next.count), 0), [data])
   return <Flex className={styles.categories} block align="left" valign="middle" gap={16}>
     <Tag.CheckableTag checked={props.value === -1} onClick={() => props.setValue(-1)}>全部({total})</Tag.CheckableTag>

@@ -12,7 +12,10 @@ export default function Page() {
   const { data: { value, state }, setData } = useGetAsync<{
     value: TBlogConfigsProps,
     state: TConfigsGroup[],
-  }>({ url: '/-/configs' });
+  }>({ 
+    id: 'configs',
+    url: '/-/configs' 
+  });
   const [name, setName] = useState<string>(state[0].name);
   const columns = useMemo(() => {
     const chunks = state.find(s => s.name === name);

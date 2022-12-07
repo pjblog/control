@@ -7,6 +7,8 @@ import { Result } from 'antd';
 const AuthorizeContext = createContext<IUserInfoState>(null);
 const AuthorizeReloadContext = createContext<() => void>(() => {});
 
+export * from './types';
+
 export function Authorize(props: PropsWithChildren<{}>) {
   const { data, error, execute } = useGetAsync<IUserInfoState>({
     id: 'authorize',

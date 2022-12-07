@@ -23,7 +23,10 @@ interface IResponse {
 export default function Page() {
   const AritlcesPather = usePath('ARTICLES');
   const id = useRequestParam('id', numberic(0)) as number;
-  const { data, error, execute } = useGetAsync<IResponse>({ url: '/-/article/' + id }, [id]);
+  const { data, error, execute } = useGetAsync<IResponse>({ 
+    id: 'article',
+    url: '/-/article/' + id 
+  }, [id]);
   const [value, setValue] = useState<string>(data?.content || '');
   const [title, setTitle] = useState<string>(data?.title || '');
   const [category, setCategory] = useState(data?.category || 0);
@@ -99,7 +102,10 @@ function Categories(props: PropsWithoutRef<{
   setValue: (val: number) => void,
   width?: number | string,
 }>) {
-  const { data } = useGetAsync<ICategoryUnOutabled[]>({ url: '/-/category/unoutabled' });
+  const { data } = useGetAsync<ICategoryUnOutabled[]>({ 
+    id: 'unOutabledCategories',
+    url: '/-/category/unoutabled' 
+  });
   const dataSource = useMemo(() => {
     const defaultOptions = [{
       label: '请选择分类',

@@ -1,5 +1,5 @@
 import { Application, HistoryMode, withImport, withMiddleware } from '@codixjs/codix';
-import { Client, ClientProvider } from '@codixjs/fetch';
+import { Client, ClientProvider, useClient, ClientContext } from '@codixjs/fetch';
 import { Provider, WebSocket } from '@pjblog/control-hooks';
 
 export default function createRouters(app: Application<HistoryMode>) {
@@ -10,7 +10,7 @@ export default function createRouters(app: Application<HistoryMode>) {
   // fetch client
   app.use(ClientProvider, { client });
   app.use(Provider);
-  
+
   // 主页
   const HOME = app.bind('/', ...withImport(() => import('./home')));
   const CONFIGS = app.bind('/configs', ...withImport(() => import('./configs')));

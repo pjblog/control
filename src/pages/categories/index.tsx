@@ -7,7 +7,10 @@ import { BlogCategoryEntity, createNewBlogCategoryEntity } from "./types";
 import { MenuOutlined } from '@ant-design/icons';
 
 export default function Page() {
-  const { data, loading, execute } = useGetAsync({ url: '/-/category' });
+  const { data, loading, execute } = useGetAsync({ 
+    id: 'categories',
+    url: '/-/category' 
+  });
   const ADD = useAsyncCallback(addCategory);
   const UPDATE = useAsyncCallback(updateCategory);
   const DELETE = useAsyncCallback(deleteCategory);
