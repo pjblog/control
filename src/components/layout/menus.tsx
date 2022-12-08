@@ -6,8 +6,6 @@ import {
   TagsFilled,
   FileTextFilled,
   RobotFilled,
-  LayoutFilled,
-  WindowsFilled,
   GiftFilled,
 } from '@ant-design/icons';
 
@@ -40,16 +38,6 @@ export const Menus: {
     icon: <RobotFilled />,
     code: 'USERS',
     label: '成员列表'
-  },
-  {
-    icon: <LayoutFilled />,
-    code: 'THEMES',
-    label: '主题管理'
-  },
-  {
-    icon: <WindowsFilled />,
-    code: 'PLUGINS',
-    label: '插件管理'
   },
   {
     icon: <GiftFilled />,

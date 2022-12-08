@@ -1,5 +1,5 @@
 import { Application, HistoryMode, withImport, withMiddleware } from '@codixjs/codix';
-import { Client, ClientProvider, useClient, ClientContext } from '@codixjs/fetch';
+import { Client, ClientProvider } from '@codixjs/fetch';
 import { Provider, WebSocket } from '@pjblog/control-hooks';
 
 export default function createRouters(app: Application<HistoryMode>) {
@@ -17,9 +17,6 @@ export default function createRouters(app: Application<HistoryMode>) {
   const CATEGORIES = app.bind('/categories', ...withImport(() => import('./categories')));
   const ARTICLES = app.bind('/articles', ...withImport(() => import('./articles')));
   const USERS = app.bind('/users', ...withImport(() => import('./users')));
-  const THEMES = app.bind('/themes', ...withImport(() => import('./themes')));
-  const PLUGINS = app.bind('/plugins', ...withImport(() => import('./plugins')));
-  const WIDGETS = app.bind('/widgets', ...withImport(() => import('./widgets')));
 
   const POST_ARTICLE = app.bind(
     '/articles/post', 
@@ -33,6 +30,12 @@ export default function createRouters(app: Application<HistoryMode>) {
     ...withImport(() => import('./articles/post')),
   );
 
+  const WIDGETS = app.bind(
+    '/widgets', 
+    withMiddleware(WebSocket, { room: '/widgets' }), 
+    ...withImport(() => import('./widgets'))
+  );
+
   const routes = {
     HOME,
     CONFIGS,
@@ -41,8 +44,6 @@ export default function createRouters(app: Application<HistoryMode>) {
     POST_ARTICLE,
     EDIT_ARTICLE,
     USERS,
-    THEMES,
-    PLUGINS,
     WIDGETS,
   }
   
