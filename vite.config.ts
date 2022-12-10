@@ -4,6 +4,7 @@ import { resolve } from 'path';
 const pkg = require('./package.json');
 const dependencies = pkg.dependencies;
 const keys = Object.keys(dependencies);
+const port = 8866;
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
@@ -38,7 +39,7 @@ export default defineConfig(async () => {
     build: {
       rollupOptions: {
         manualChunks: {
-          vonder: keys,
+          vonder: keys.filter(key => !key.startsWith('@types/')),
         }
       }
     },
@@ -60,11 +61,15 @@ export default defineConfig(async () => {
       proxy: {
         "/-": {
           changeOrigin: true,
-          target: "http://127.0.0.1:8000",
+          target: "http://127.0.0.1:" + port,
+        },
+        "/~": {
+          changeOrigin: true,
+          target: "http://127.0.0.1:" + port,
         },
         "/socket.io": {
           changeOrigin: true,
-          target: "http://127.0.0.1:8000",
+          target: "http://127.0.0.1:" + port,
         }
       }
     }

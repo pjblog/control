@@ -1,7 +1,7 @@
 import { ITheme } from 'xterm';
 export const colors: ITheme = {
-  foreground: '#000',
-  background: '#ffffff',
+  foreground: '#bfbfbf',
+  background: '#1e202f',
   cursor: '#ffffff',
   black: '#3e3e3e',
   brightBlack: '#666666',
