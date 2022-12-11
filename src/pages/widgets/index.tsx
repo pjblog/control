@@ -1,17 +1,20 @@
 import 'xterm/css/xterm.css';
+import 'react-photo-view/dist/react-photo-view.css';
 import styles from './index.module.less';
 import classnames from 'classnames';
+import { PhotoProvider, PhotoView } from 'react-photo-view';
 import { Terminal } from 'xterm';
 import { loadMicroApp } from 'qiankun';
 import { CanvasAddon } from 'xterm-addon-canvas';
 import { FitAddon } from 'xterm-addon-fit';
-import { Fields, Flex, IUserInfoState, useAuthorize, useSocket } from '@pjblog/control-hooks';
+import { Fields, Flex, IUserInfoState, request, useAuthorize, useGetAsync, useSocket } from '@pjblog/control-hooks';
 import { Fragment, PropsWithChildren, PropsWithoutRef, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { colors } from './colors';
-import { Button, Input, Select, Space, Popconfirm, Divider, Checkbox, Empty, Avatar, Typography, Drawer } from 'antd';
-import { EnterOutlined, CloseOutlined, CodeSandboxOutlined, CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
+import { Button, Input, Select, Space, Popconfirm, Divider, Checkbox, Empty, Avatar, Typography, Drawer, message } from 'antd';
+import { EnterOutlined, CloseOutlined, CodeSandboxOutlined, CaretDownOutlined, CaretUpOutlined, CheckOutlined } from '@ant-design/icons';
 import { Socket } from 'socket.io-client';
 import { IPackage, IPackages } from './types';
+import { useAsyncCallback } from '@codixjs/fetch';
 
 const banner = (admin: IUserInfoState) => `Hello \x1b[31;1m${admin.nickname}\x1b[0m:
   Logined with account \x1b[32m${admin.account}\x1b[0m.
@@ -41,13 +44,17 @@ export default function Page() {
   const [running, setRunning] = useState(false);
   const [command, setCommand] = useState<string>(null);
   const [showTerminal, setShowTerminal] = useState(true);
-
   const [auto, setAuto] = useState(true);
   const [dataSource, setDataSource] = useState<IPackages>({});
   const [themes, setThemes] = useState<IPackage[]>([]);
   const [plugins, setPlugins] = useState<IPackage[]>([]);
+  const [currentConfigs, setCurrentConfigs] = useState<IPackage>(null);
+  const { data: { theme: _theme }, setData } = useGetAsync<{ theme: string }>({
+    id: 'theme',
+    url: '/theme',
+  })
 
-  const [currentConfigs, setCurrentConfigs] = useState<IPackage>(null)
+  const setTheme = useCallback((theme: string) => setData({ theme }), [setData]);
 
   const install = useCallback(() => {
     if (!installName) return;
@@ -190,11 +197,18 @@ export default function Page() {
       </div>
     </Flex>
     <Flex span={1} block scroll="hide">
-      <Channel title="主题" width={500}>
+      <Channel title="主题" width={300}>
         {
           !themes.length
             ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-            : 'dda'
+            : themes.map(theme => <Theme
+                current={theme.meta.name === _theme}
+                key={theme.meta.name}
+                value={theme}
+                setTheme={setTheme}
+                setConfigs={setCurrentConfigs}
+                actived={!!currentConfigs && currentConfigs.meta.name === theme.meta.name} 
+              />)
         }
       </Channel>
       <Channel 
@@ -344,4 +358,77 @@ function Advance(props: PropsWithoutRef<IPackage>) {
       <div ref={ref}></div>
     </Drawer>
   </Fragment>
+}
+
+function Theme(props: PropsWithoutRef<{ 
+  value: IPackage,
+  actived: boolean,
+  current: boolean,
+  setTheme: (theme: string) => void,
+  setConfigs: React.Dispatch<React.SetStateAction<IPackage<any>>>,
+}>) {
+  const socket = useSocket()
+  const uninstall = useCallback((name: string) => {
+    if (socket) {
+      socket.emit('uninstall', name);
+    }
+  }, [socket])
+  const { execute, loading } = useAsyncCallback(async (name: string) => {
+    const res = await request.post('/theme', { theme: name });
+    return res.data;
+  })
+  const use = useCallback(() => {
+    if (props.current) return;
+    execute(props.value.meta.name)
+      .then(() => props.setTheme(props.value.meta.name))
+      .then(() => message.success('主题启用成功'))
+      .catch(e => message.error(e.message));
+  }, [])
+  return <div className={classnames(styles.theme, {
+    [styles.active]: props.actived,
+    [styles.current]: props.current,
+  })}>
+    <div className={styles.checked}><CheckOutlined /></div>
+    <div className={styles.wrap}>
+      <Preview images={props.value.meta.previews}>
+        <img className={styles.cover} src={props.value.meta.icon} alt={props.value.meta.name} />
+      </Preview>
+      <div className={styles.info}>
+        <Typography.Paragraph className={styles.name} ellipsis={{ rows: 1 }}>{props.value.meta.name}</Typography.Paragraph>
+        <Typography.Text className={styles.version}>@{props.value.meta.version}</Typography.Text>
+        <Typography.Paragraph className={styles.description}>{props.value.meta.descriptions}</Typography.Paragraph>
+        <Space className={styles.tools}>
+          {!props.current && <Popconfirm
+            title="确定启用此主题？"
+            onConfirm={use}
+            okText="启用"
+            cancelText="取消"
+            disabled={loading}
+          ><Typography.Link disabled={loading}>启用</Typography.Link></Popconfirm>}
+          {!!props.value.rules.length && <Typography.Link onClick={() => props.setConfigs(props.value)}>配置</Typography.Link>}
+          {!!props.value.meta.repository && <Typography.Link href={props.value.meta.repository} target="_blank" type="secondary">仓库</Typography.Link>}
+          {!!props.value.meta.homepage && <Typography.Link href={props.value.meta.homepage} target="_blank" type="secondary">主页</Typography.Link>}
+          {!props.current && <Popconfirm
+            title="确定卸载此主题？"
+            onConfirm={() => uninstall(props.value.meta.name)}
+            okText="卸载"
+            cancelText="放弃"
+          ><Typography.Link type="danger">卸载</Typography.Link></Popconfirm>}
+        </Space>
+      </div>
+    </div>
+  </div>
+}
+
+function Preview(props: PropsWithChildren<{ images: string[] }>) {
+  if (!props.images || !props.images.length) return;
+  return <PhotoProvider>
+    {
+      props.images.map((image, index) => {
+        return <PhotoView src={image} key={image}>
+          {index === 0 ? props.children as JSX.Element : null}
+        </PhotoView>
+      })
+    }
+  </PhotoProvider>
 }
