@@ -96,7 +96,6 @@ export default function Page() {
 
   useEffect(() => {
     if (ref.current && boxRef.current && admin.account) {
-      console.log('rows', Math.floor(boxRef.current.clientHeight / 22) - 1)
       const _term = new Terminal({
         rows: Math.floor(boxRef.current.clientHeight / 22) - 1,
         theme: colors,
@@ -383,7 +382,7 @@ function Theme(props: PropsWithoutRef<{
       .then(() => props.setTheme(props.value.meta.name))
       .then(() => message.success('主题启用成功'))
       .catch(e => message.error(e.message));
-  }, [])
+  }, [props.current, props.value.meta.name, props.setTheme])
   return <div className={classnames(styles.theme, {
     [styles.active]: props.actived,
     [styles.current]: props.current,
@@ -404,6 +403,7 @@ function Theme(props: PropsWithoutRef<{
             okText="启用"
             cancelText="取消"
             disabled={loading}
+            placement="right"
           ><Typography.Link disabled={loading}>启用</Typography.Link></Popconfirm>}
           {!!props.value.rules.length && <Typography.Link onClick={() => props.setConfigs(props.value)}>配置</Typography.Link>}
           {!!props.value.meta.repository && <Typography.Link href={props.value.meta.repository} target="_blank" type="secondary">仓库</Typography.Link>}
