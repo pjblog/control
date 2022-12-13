@@ -46,10 +46,7 @@ export default function Page() {
       }}
       items={state.map(group => {
         return {
-          label: <Flex align="right" direction="vertical" className={styles.channel}>
-            <span>{group.title}</span>
-            <span className={styles.tip}>{group.subTitle}</span>
-          </Flex>,
+          label: <div className={styles.channel}>{group.title}</div>,
           key: group.name
         }
       })}
