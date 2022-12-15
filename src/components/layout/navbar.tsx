@@ -7,9 +7,9 @@ import { Docs } from './docs-btn';
 import { Exit } from './exit-btn';
 import { PropsWithoutRef } from "react";
 
-export function Navbar(props: PropsWithoutRef<{}>) {
+export function Navbar(props: PropsWithoutRef<{ label?: string }>) {
   return <Flex align="between" block valign="middle" scroll="hide">
-    <Position />
+    <Position label={props.label} />
     <Space>
       <PostArticle />
       <Offical />

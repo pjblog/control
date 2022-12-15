@@ -9,6 +9,7 @@ export function Fields<T>(props: React.PropsWithChildren<{
   gutter?: RowProps['gutter'],
   size?: SpaceProps['size'],
   onChange: (e: T) => void,
+  className?: string
 }>) {
   const [data, setData] = useState(props.dataSource);
   const getValue = useCallback((name: keyof T) => data[name], [data]);
@@ -29,6 +30,7 @@ export function Fields<T>(props: React.PropsWithChildren<{
           setValue={setValue} 
           size={props.size} 
           key={schema.name} 
+          className={props.className}
         />
       })
     }
@@ -40,6 +42,7 @@ function Field<T>(schema: React.PropsWithoutRef<TWidgetConfigProp<T[keyof T]> & 
   getValue: (name: keyof T) => T[keyof T],
   setValue: <U extends keyof T>(name: U, val: T[U]) => void,
   size?: SpaceProps['size'],
+  className?: string,
 }>) {
   const schemaValue = schema.getValue(schema.name as keyof T);
   return <Col span={24} key={schema.name}>
@@ -53,6 +56,7 @@ function Field<T>(schema: React.PropsWithoutRef<TWidgetConfigProp<T[keyof T]> & 
       prefix={schema.prefix} 
       suffix={schema.suffix}
       size={schema.size}
+      className={schema.className}
     />
   </Col>
 }

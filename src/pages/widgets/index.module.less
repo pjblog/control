@@ -1,4 +1,4 @@
-@theme-size: 2px;
+@theme-size: 1px;
 .installer{
   height: 40px;
   padding: 0px 8px 0px 24px;
@@ -42,6 +42,9 @@
     .toggle{
       font-size: 14px;
       cursor: pointer;
+    }
+    .command{
+      font-weight: 300;
     }
   }
   .box{
@@ -116,11 +119,6 @@
   }
 }
 
-.configs {
-  padding: 12px 24px;
-  box-sizing: border-box;
-}
-
 .theme {
   border-bottom: 1px solid #f5f5f5;
   &:last-child{
@@ -129,6 +127,27 @@
   .cover{
     width: 100%;
     cursor: pointer;
+    position: relative;
+    img{
+      width: 100%;
+    }
+    .checked{
+      display: none;
+    }
+    .version{
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      display: inline-block;
+      background-color: #1890ff;
+      color: #fff;
+      font-size: 12px;
+      border-radius: 10px;
+      height: 20px;
+      line-height: 20px;
+      padding: 0 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,.1);
+    }
   }
   .info{
     padding: 8px 12px;
@@ -137,11 +156,11 @@
       margin: 0;
       font-size: 14px;
     }
-    .version{
-      color: #bfbfbf;
-      font-weight: 300;
-      font-size: 12px;
-    }
+    // .version{
+    //   color: #bfbfbf;
+    //   font-weight: 300;
+    //   font-size: 12px;
+    // }
     .description{
       color: #595959;
       font-weight: 300;
@@ -154,27 +173,27 @@
       }
     }
   }
-  .checked{
-    display: none;
-  }
   &.active{
     background-color: #e6f7ff;
   }
   &.current{
     position: relative;
-    .checked{
-      display: flex;
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 20px;
-      height: 20px;
-      background-color: #1890ff;
-      color: #fff;
-      justify-content: center;
-      align-items: center;
-      font-size: 12px;
-      border-radius: 0 0 0 4px;
+    .cover{
+      background-color: #eee;
+      .checked{
+        display: flex;
+        position: absolute;
+        right: 8px;
+        top: 0;
+        height: 20px;
+        padding: 2px 8px;
+        border-radius: 0 0 3px 3px;
+        background-color: #1890ff;
+        color: #fff;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+      }
     }
     &::before{
       position: absolute;
@@ -226,5 +245,13 @@
         border-radius: 0 0 1px 1px;
       }
     }
+  }
+}
+
+.configchannel{
+  border-bottom: 1px solid #f5f5f5;
+  padding: 8px 24px;
+  &:hover{
+    background-color: #fefefe;
   }
 }

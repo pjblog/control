@@ -11,7 +11,7 @@ import { Fields, Flex, IUserInfoState, request, useAuthorize, useGetAsync, useSo
 import { Fragment, PropsWithChildren, PropsWithoutRef, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { colors } from './colors';
 import { Button, Input, Select, Space, Popconfirm, Divider, Checkbox, Empty, Avatar, Typography, Drawer, message } from 'antd';
-import { EnterOutlined, CloseOutlined, CodeSandboxOutlined, CaretDownOutlined, CaretUpOutlined, CheckOutlined } from '@ant-design/icons';
+import { EnterOutlined, CloseOutlined, CodeSandboxOutlined, CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 import { Socket } from 'socket.io-client';
 import { IPackage, IPackages } from './types';
 import { useAsyncCallback } from '@codixjs/fetch';
@@ -170,30 +170,12 @@ export default function Page() {
           onChange={e => setInstallName(e.target.value)} 
           bordered={false} 
           placeholder="安装模块ID..." 
-          suffix={<EnterOutlined style={{ cursor: 'pointer' }} onClick={install} />} 
+          suffix={<EnterOutlined style={{ cursor: 'pointer', color: "#bbb" }} onClick={install} />} 
           autoFocus 
           onPressEnter={install}
           style={{ width: 300 }}
         />
       </Flex>
-      <div>
-        <Flex className={styles.commander} block scroll="hide" align="between" valign="middle">
-          <span>状态</span>
-          <Divider type="vertical" />
-          <Space size={16}>
-            <span className={styles.status}>{running ? '运行中' : '已停止'}</span>
-            <span>{command}</span>
-          </Space>
-          { 
-            running && <Popconfirm
-              title="确定放弃这个任务？"
-              onConfirm={cancel}
-              okText="放弃"
-              cancelText="继续"
-            ><Button type="text" danger icon={<CloseOutlined />} size="small" /></Popconfirm>
-          }
-        </Flex>
-      </div>
     </Flex>
     <Flex span={1} block scroll="hide">
       <Channel title="主题" width={300}>
@@ -214,15 +196,14 @@ export default function Page() {
         title={'配置' + (currentConfigs ? ' - ' + currentConfigs.meta.name.toUpperCase() : '')}
         extra={!!currentConfigs && <Button type="primary" size="middle" onClick={() => saveConfigs(currentConfigs.meta.name)}>保存</Button>}
       >
-        <div className={styles.configs}>
         {
           !!currentConfigs && <Fields 
             dataSource={currentConfigs.values} 
             schemas={currentConfigs.rules}
             onChange={e => onConfisChange(currentConfigs.meta.name, e)}
+            className={styles.configchannel}
           />
         }
-        </div>
       </Channel>
       <Channel title="插件" width={500}>
         {
@@ -241,7 +222,22 @@ export default function Page() {
       [styles.show]: showTerminal
     })}>
       <Flex className={styles.console} block valign="middle" align="between">
-        <span><CodeSandboxOutlined className={styles.icon} /> TERMINAL</span>
+        <Flex valign="middle">
+          <span><CodeSandboxOutlined className={styles.icon} /> TERMINAL</span>
+          <Divider type="vertical" />
+          <span className={styles.command}>{command}</span>
+          <Divider type="vertical" />
+          { 
+            running && <Popconfirm
+              title="确定放弃这个任务？"
+              onConfirm={cancel}
+              okText="放弃"
+              cancelText="继续"
+            >
+              <Typography.Link type="danger" style={{ fontSize: 12 }}><CloseOutlined /></Typography.Link>
+            </Popconfirm>
+          }
+        </Flex>
         <div className={styles.toggle} onClick={() => setShowTerminal(!showTerminal)}>
           {showTerminal ? <CaretDownOutlined /> : <CaretUpOutlined />}
         </div>
@@ -387,14 +383,16 @@ function Theme(props: PropsWithoutRef<{
     [styles.active]: props.actived,
     [styles.current]: props.current,
   })}>
-    <div className={styles.checked}><CheckOutlined /></div>
     <div className={styles.wrap}>
       <Preview images={props.value.meta.previews}>
-        <img className={styles.cover} src={props.value.meta.icon} alt={props.value.meta.name} />
+        <div className={styles.cover}>
+          <img src={props.value.meta.icon} alt={props.value.meta.name} />
+          <Typography.Text className={styles.version}>Version @{props.value.meta.version}</Typography.Text>
+          <div className={styles.checked}>当前主题</div>
+        </div>
       </Preview>
       <div className={styles.info}>
         <Typography.Paragraph className={styles.name} ellipsis={{ rows: 1 }}>{props.value.meta.name}</Typography.Paragraph>
-        <Typography.Text className={styles.version}>@{props.value.meta.version}</Typography.Text>
         <Typography.Paragraph className={styles.description}>{props.value.meta.descriptions}</Typography.Paragraph>
         <Space className={styles.tools}>
           {!props.current && <Popconfirm

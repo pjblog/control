@@ -40,18 +40,21 @@ export function Some<V, T extends (TKey<V>)>(props: React.PropsWithoutRef<{
   size?: SpaceProps['size'],
   prefix?: React.ReactNode,
   suffix?: React.ReactNode,
+  className?: string
 }>) {
   // @ts-ignore
   const Comp = useMemo(() => types[props.type], [props.type]) as any;
-  return <Space direction="vertical" size={props.size}>
-    <Space className={styles.title} size={12}>
-      <div className={styles.label}>{props.label}</div>
-      <div className={styles.name}>{props.name}</div>
+  return <div className={props.className}>
+    <Space direction="vertical" size={props.size}>
+      <Space className={styles.title} size={12}>
+        <div className={styles.label}>{props.label}</div>
+        <div className={styles.name}>{props.name}</div>
+      </Space>
+      {!!props.prefix && <div className={styles.prefix}>{props.prefix}</div>}
+      <div className={styles.component}>
+        <Comp value={props.value} options={props.options} onChange={props.onChange} />
+      </div>
+      {!!props.suffix && <div className={styles.suffix}>{props.suffix}</div>}
     </Space>
-    {!!props.prefix && <div className={styles.prefix}>{props.prefix}</div>}
-    <div className={styles.component}>
-      <Comp value={props.value} options={props.options} onChange={props.onChange} />
-    </div>
-    {!!props.suffix && <div className={styles.suffix}>{props.suffix}</div>}
-  </Space>
+  </div>
 }

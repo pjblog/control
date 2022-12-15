@@ -1,0 +1,134 @@
+.container {
+  padding: 24px;
+}
+
+.box {
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 8px 12px;
+  .item{
+    border-top: 1px dashed #eee;
+    color: #666;
+    padding: 10px 0 2px 0;
+    margin-top: 8px;
+    font-size: 12px;
+  }
+  .extra{
+    font-size: 12px;
+    color: #bbb;
+    cursor: pointer;
+  }
+}
+
+.quick {
+  font-size: 24px;
+  cursor: pointer;
+  span.label{
+    font-size: 14px;
+    color: #666;
+  }
+}
+
+.boxwrap{
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  height: 116px;
+}
+
+.activity{
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 12px;
+  box-sizing: border-box;
+  background-color: #1e202f;
+  color: #fff;
+  background-image: url(https://github.githubassets.com/images/modules/dashboard/codespaces/bg.jpg);
+  background-repeat: no-repeat;
+  background-position: top right;
+  .title{
+    margin-bottom: 12px;
+    font-size: 18px;
+  }
+  .summary{
+    color: rgba(255, 255, 255, 0.67);
+    font-size: 12px;
+    width: 50%;
+    margin-bottom: 20px;
+  }
+}
+
+.simpleTitle{
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+.changes{
+  .time{
+    color: #57606a;
+    font-size: 12px;
+  }
+  .text{
+    color: #333;
+    a{
+      &,&:link,&:visited{
+        color: #24292f;
+      }
+      &:hover{
+        color: #0969da;
+        text-decoration: underline;
+      }
+    }
+  }
+  a.more{
+    font-size: 14px;
+    &,&:link,&:visited{
+      color: #57606a;
+    }
+    &:hover{
+      color: #0969da;
+    }
+  }
+  :global {
+    .ant-timeline-item-last{
+      padding-bottom: 0;
+      .ant-timeline-item-content{
+        min-height: 10px;
+      }
+    }
+  }
+}
+
+.articleCard{
+  :global{
+    .ant-card-body{
+      padding: 0;
+    }
+  }
+  .article{
+    .title{
+      font-weight: 500;
+    }
+    .summary{ 
+      font-size: 12px;
+      color: #555;
+      line-height: 24px;
+      font-weight: 300;
+    }
+    .extras{
+      color: #bbb;
+      .item{
+        font-size: 12px!important;
+      }
+      a{
+        &,&:link,&:visited{
+          color: #bbb;
+        }
+        &:hover{
+          color: #0969da;
+        }
+      }
+    }
+  }
+}
