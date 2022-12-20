@@ -13,6 +13,7 @@ import { RadioList } from './radio';
 import { SelectList } from './select';
 import { SwitchBox } from './switch';
 import { Tags } from './tags';
+import { Color } from './color';
 
 export * from './tags';
 
@@ -28,6 +29,7 @@ const types = {
   select: SelectList,
   switch: SwitchBox,
   tags: Tags,
+  color: Color,
 }
 
 export function Some<V, T extends (TKey<V>)>(props: React.PropsWithoutRef<{

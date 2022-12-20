@@ -77,8 +77,12 @@ export interface TTagsProps {
   placeholder?: string,
 }
 
+export interface TColor {
+
+}
+
 export interface TWidgetConfigProp<U> extends TWidgetConfigBase<U> {
-  type: 'text' | 'number' | 'password' | 'checkbox' | 'checkgroup' | 'textarea' | 'radio' | 'select' | 'switch' | 'tags',
+  type: 'text' | 'number' | 'password' | 'checkbox' | 'checkgroup' | 'textarea' | 'radio' | 'select' | 'switch' | 'tags' | 'color',
   text?: TInputBaseProps,
   number?: TInputNumberProps,
   password?: TInputBaseProps,
@@ -88,5 +92,6 @@ export interface TWidgetConfigProp<U> extends TWidgetConfigBase<U> {
   radio?: TRadioprops,
   select?: TSelectProps,
   switch?: TSwitchProps,
-  tags?: TTagsProps
+  tags?: TTagsProps,
+  color?: TColor,
 }

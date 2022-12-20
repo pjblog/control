@@ -1,6 +1,6 @@
 {
   "name": "@pjblog/control",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "pjblog control manager",
   "main": "index.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "@codixjs/fetch": "^1.0.0",
     "@codixjs/server": "^1.0.0",
     "@types/crypto-js": "^4.1.1",
+    "@types/react-color": "^3.0.6",
     "@uiw/react-codemirror": "^4.17.1",
     "antd": "^5.0.3",
     "axios": "^1.2.0",
@@ -32,6 +33,7 @@
     "immutability-helper": "^3.1.1",
     "qiankun": "^2.8.4",
     "react": "^18.0.0",
+    "react-color": "^2.19.3",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.0.0",
