@@ -14,7 +14,7 @@ export function Color(props: React.PropsWithoutRef<{
       <div className={styles.box}>
         <div className={styles.color} style={{ backgroundColor: props.value }}></div>
       </div>
-      <span className={styles.value}>{props.value.toUpperCase()}</span>
+      <span className={styles.value}>{props?.value?.toUpperCase()}</span>
     </Space>
   </Dropdown>
 }
