@@ -11,6 +11,7 @@ import { useRequestParam } from '@codixjs/codix';
 import { numberic } from '../../../utils';
 import { usePath } from '../../../hooks';
 import { useAsyncCallback, useClient } from '@codixjs/fetch';
+import { githubLight } from '@uiw/codemirror-theme-github';
 
 interface IResponse {
   title: string,
@@ -84,11 +85,13 @@ export default function Page() {
       <Flex span={1} full scroll="hide">
         <div className={styles.editor}>
           <CodeMirror 
+            autoFocus
             minHeight="100%"
             value={value} 
             extensions={[markdown({ base: markdownLanguage, codeLanguages: languages })]} 
             onChange={e => setValue(e)} 
             placeholder="请输入日志内容..."
+            theme={githubLight}
           />
         </div>
       </Flex>
