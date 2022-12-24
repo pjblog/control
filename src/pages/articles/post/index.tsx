@@ -12,6 +12,7 @@ import { numberic } from '../../../utils';
 import { usePath } from '../../../hooks';
 import { useAsyncCallback, useClient } from '@codixjs/fetch';
 import { githubLight } from '@uiw/codemirror-theme-github';
+import { EditorView } from '@codemirror/view';
 
 interface IResponse {
   title: string,
@@ -87,10 +88,14 @@ export default function Page() {
           <CodeMirror 
             autoFocus
             minHeight="100%"
+            width='100%'
             value={value} 
-            extensions={[markdown({ base: markdownLanguage, codeLanguages: languages })]} 
+            extensions={[
+              markdown({ base: markdownLanguage, codeLanguages: languages }), 
+              EditorView.lineWrapping
+            ]} 
             onChange={e => setValue(e)} 
-            placeholder="请输入日志内容..."
+            placeholder="请输入文章内容..."
             theme={githubLight}
           />
         </div>
@@ -161,10 +166,15 @@ function Summary(props: PropsWithoutRef<{
     <Drawer title="编辑本文摘要" placement="right" onClose={() => setOpen(false)} open={open} width="50%">
       <CodeMirror 
         minHeight="100%"
+        width='100%'
         value={props.value} 
-        extensions={[markdown({ base: markdownLanguage, codeLanguages: languages })]} 
+        extensions={[
+          markdown({ base: markdownLanguage, codeLanguages: languages }),
+          EditorView.lineWrapping
+        ]} 
         onChange={e => props.setValue(e)} 
         placeholder="请输入摘要内容..."
+        theme={githubLight}
       />
     </Drawer>
   </Fragment>
