@@ -4,7 +4,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { languages } from '@codemirror/language-data';
 import { Flex, useGetAsync, Tags, useSocket, request } from "@pjblog/control-hooks";
-import { Button, Input, Space, Divider, Select, Drawer, Result, message } from 'antd';
+import { Button, Input, Space, Divider, Select, Drawer, Result, message, Tooltip, Popconfirm } from 'antd';
 import { Fragment, PropsWithoutRef, useCallback, useEffect, useMemo, useState } from 'react';
 import { ICategoryUnOutabled } from '../types';
 import { useRequestParam } from '@codixjs/codix';
@@ -34,6 +34,7 @@ export default function Page() {
   const [category, setCategory] = useState(data?.category || 0);
   const [tags, setTags] = useState<string[]>(data?.tags || []);
   const [summary, setSummary] = useState(data?.summary || '');
+  const [draft, setDraft] = useState<string>(null);
 
   useEffect(() => {
     setValue(data?.content || '');
@@ -62,8 +63,9 @@ export default function Page() {
       </Flex>
       <Space>
         <Categories value={category} setValue={setCategory} />
+        <Draft disabled={!draft || value === draft} setValue={() => setValue(draft)} />
         <Summary value={summary} setValue={setSummary} />
-        <Submit value={value} id={id} title={title} category={category} tags={tags} summary={summary} reload={execute} />
+        <Submit value={value} id={id} title={title} category={category} tags={tags} summary={summary} reload={execute} draft={draft} />
       </Space>
     </Flex>
     <Flex className={classNames(styles.toolbar, styles.title)} block align="between" valign="middle" gap={24}>
@@ -100,9 +102,22 @@ export default function Page() {
           />
         </div>
       </Flex>
-      <Preview value={value} />
+      <Preview value={value} setDraft={setDraft} />
     </Flex>
   </Flex>
+}
+
+function Draft(props: React.PropsWithoutRef<{ disabled?: boolean, setValue: () => void }>) {
+  return <Tooltip title="将恢复草稿中的最新版本内容" placement='top'>
+    <Popconfirm
+      title="恢复内容"
+      description="确定从草稿中恢复文章内容？"
+      onConfirm={props.setValue}
+      okText="恢复"
+      cancelText="取消"
+      disabled={props.disabled}
+    ><Button disabled={props.disabled}>从草稿中恢复</Button></Popconfirm>
+  </Tooltip>
 }
 
 function Categories(props: PropsWithoutRef<{
@@ -136,19 +151,30 @@ function Categories(props: PropsWithoutRef<{
   />
 }
 
-function Preview(props: PropsWithoutRef<{ value: string }>) {
+function Preview(props: PropsWithoutRef<{ value: string, setDraft: React.Dispatch<React.SetStateAction<string>> }>) {
   const socket = useSocket();
   const [html, setHTML] = useState<string>(null);
   useEffect(() => {
     if (props.value && socket) {
       const handler = (html: string) => setHTML(html);
-      socket.on('markdown', handler);
-      socket.emit('markdown', props.value);
+      socket.on('getDraft', (text: string) => {
+        socket.on('markdown', handler);
+        socket.emit('markdown', props.value);
+        if (!!text) {
+          props.setDraft(text);
+        }
+      })
+      socket.emit('getDraft');
       return () => {
         socket.off('markdown', handler);
       }
     }
-  }, [props.value, socket])
+  }, [socket])
+  useEffect(() => {
+    if (props.value && socket) {
+      socket.emit('markdown', props.value);
+    }
+  }, [props.value, socket]);
   return <Flex span={1} full scroll="hide">
     <div className={styles.preview}>
       <div className="markdown" dangerouslySetInnerHTML={{ __html: html }}></div>
@@ -187,11 +213,12 @@ function Submit(props: PropsWithoutRef<{
   category: number,
   tags: string[],
   summary: string,
+  draft: string,
   reload: () => void
 }>) {
   const client = useClient();
   const ArticlesPather = usePath('ARTICLES');
-  const { id, value, title, category, tags, summary } = props;
+  const { id, value, title, category, tags, summary, draft } = props;
   const { execute, loading } = useAsyncCallback(async () => {
     const res = await request.post('/-/article/' + id, {
       title,
@@ -207,6 +234,7 @@ function Submit(props: PropsWithoutRef<{
     if (!title) return false;
     if (category <= 0) return false;
     if (!summary) return false;
+    if (value === draft) return false;
     return true;
   }, [value, title, category, summary]);
   const submit = useCallback(() => {

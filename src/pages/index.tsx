@@ -26,7 +26,9 @@ export default function createRouters(app: Application<HistoryMode>) {
 
   const EDIT_ARTICLE = app.bind<{ id: number }>(
     '/articles/post/:id(\\d+)', 
-    withMiddleware(WebSocket, { room: '/article' }), 
+    withMiddleware(WebSocket, { 
+      room: req => `/article/${req.params.id}` 
+    }), 
     ...withImport(() => import('./articles/post')),
   );
 
