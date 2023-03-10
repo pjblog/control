@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 import { Terminal } from 'xterm';
 import { loadMicroApp } from 'qiankun';
-import { CanvasAddon } from 'xterm-addon-canvas';
+// import { CanvasAddon } from 'xterm-addon-canvas';
 import { FitAddon } from 'xterm-addon-fit';
 import { Fields, Flex, IUserInfoState, request, useAuthorize, useGetAsync, useSocket } from '@pjblog/control-hooks';
 import { Fragment, PropsWithChildren, PropsWithoutRef, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
@@ -110,7 +110,7 @@ export default function Page() {
       const fitAddon = new FitAddon();
       _term.loadAddon(fitAddon);
       _term.open(ref.current);
-      _term.loadAddon(new CanvasAddon());
+      // _term.loadAddon(new CanvasAddon());
       fitAddon.fit();
       _term.write(banner(admin));
       setTerm(_term);
